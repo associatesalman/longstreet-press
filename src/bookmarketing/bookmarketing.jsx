@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  HONEYPOT_FIELD,
+  MONTHLY_BUDGETS,
+  PRIMARY_SERVICES,
+  TARGET_MARKETS,
+  emptyInquiry,
+  validateInquiry,
+} from "../lib/inquiry";
+
+// Messages for each failure the server can report. None reveal provider details.
+const SERVER_ERRORS = {
+  "rate-limit": "We have received several submissions from your connection. Please wait a few minutes and try again.",
+  unavailable: "Our inquiry desk is temporarily unavailable. Your details are still in the form; please try again later.",
+  delivery: "We could not deliver your submission just now. Your details are still in the form; please try again shortly.",
+};
+const GENERIC_ERROR = "Something went wrong while sending your submission. Your details are still in the form; please try again.";
 
 export default function MarketingPage() {
-  // ==============================================================
-  // STEP: YAHAN APNI WEB3FORMS ACCESS KEY PASTE KAREIN
-  // (Jo aapko associatesalman@gmail.com par aayegi)
-  // ==============================================================
-  const WEB3FORMS_ACCESS_KEY = "YOUR_ACCESS_KEY_HERE";
-
+  // Book Marketing inquiries go to the server endpoint (server/inquiry.js), which emails
+  // them over SMTP. The recipient address and credentials live only in server env vars.
   const [activeTab, setActiveTab] = useState("amazon");
-  const [form, setForm] = useState({
-    authorOrPublisher: "",
-    contactName: "",
-    email: "",
-    amazonLinkOrAsin: "",
-    genre: "Literary Fiction",
-    targetMarket: "Amazon US and Global",
-    primaryService: "Full-Service Book Publishing and Print Production",
-    monthlyBudget: "$1,500 - $3,500",
-    campaignNotes: "",
-    termsAccepted: false,
-  });
+  const [form, setForm] = useState(emptyInquiry);
+  const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState([]);
+  const [invalidFields, setInvalidFields] = useState({});
+  // Synchronous guard so a double click cannot send two requests before React re-renders.
+  const pending = useRef(false);
 
   const update = (e) => {
     const { name, value, type, checked } = e.target;
@@ -30,82 +36,81 @@ export default function MarketingPage() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    setError("");
+    setErrors([]);
+    setSubmitted(false);
+    setInvalidFields((prev) => (prev[name] ? { ...prev, [name]: undefined } : prev));
+  };
+
+  const showFieldErrors = (fieldErrors) => {
+    setInvalidFields(fieldErrors);
+    setErrors([...new Set(Object.values(fieldErrors))]);
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    if (pending.current) return;
+    setErrors([]);
+    setSubmitted(false);
 
-    // Required fields check
-    if (!form.authorOrPublisher || !form.contactName || !form.email || !form.campaignNotes) {
-      setError("Please complete all required fields marked with an asterisk.");
+    // Same rules the server applies (src/lib/inquiry.js).
+    const { errors: fieldErrors } = validateInquiry(form);
+    if (Object.keys(fieldErrors).length) {
+      showFieldErrors(fieldErrors);
       return;
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(form.email)) {
-      setError("Please provide a valid professional email address.");
-      return;
-    }
-
-    if (!form.termsAccepted) {
-      setError("Please acknowledge our privacy and campaign terms.");
-      return;
-    }
-
+    pending.current = true;
     setIsSubmitting(true);
 
     try {
-      // Direct Email Sending to associatesalman@gmail.com via Web3Forms
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("/api/inquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `New Campaign Proposal: ${form.authorOrPublisher} (${form.contactName})`,
-          from_name: "Thundersmouth Book Portal",
-          to_email: "associatesalman@gmail.com",
-          "Author / Press Name": form.authorOrPublisher,
-          "Contact Name": form.contactName,
-          "Email Address": form.email,
-          "Amazon ASIN / ISBN / URL": form.amazonLinkOrAsin || "Not provided (Unpublished)",
-          "Target Marketplace": form.targetMarket,
-          "Primary Service Requested": form.primaryService,
-          "Monthly Promotion Budget": form.monthlyBudget,
-          "Campaign Objectives & Notes": form.campaignNotes,
-        }),
+        body: JSON.stringify({ ...form, [HONEYPOT_FIELD]: honeypot }),
       });
 
-      const result = await response.json();
-
-      if (result.success) {
-        setSubmitted(true);
-        // Form reset after submission
-        setForm({
-          authorOrPublisher: "",
-          contactName: "",
-          email: "",
-          amazonLinkOrAsin: "",
-          genre: "Literary Fiction",
-          targetMarket: "Amazon US and Global",
-          primaryService: "Full-Service Book Publishing and Print Production",
-          monthlyBudget: "$1,500 - $3,500",
-          campaignNotes: "",
-          termsAccepted: false,
-        });
-      } else {
-        setError(result.message || "Failed to deliver submission. Please check your Access Key.");
+      let result = null;
+      try {
+        result = await response.json();
+      } catch {
+        result = null;
       }
-    } catch (err) {
-      setError("Network error occurred. Please check your connection and try again.");
+
+      // Success only when the server confirms the email provider accepted the message.
+      if (response.ok && result?.ok === true) {
+        setSubmitted(true);
+        setInvalidFields({});
+        setForm(emptyInquiry);
+        setHoneypot("");
+      } else if (result?.error === "validation" && result.errors && typeof result.errors === "object") {
+        showFieldErrors(result.errors);
+      } else {
+        setErrors([SERVER_ERRORS[result?.error] ?? GENERIC_ERROR]);
+      }
+    } catch {
+      setErrors(["Network error occurred. Your details are still in the form; please check your connection and try again."]);
     } finally {
+      pending.current = false;
       setIsSubmitting(false);
     }
   };
+
+  const fieldClass = (name) =>
+    `w-full bg-white border ${invalidFields[name] ? "border-red-400" : "border-[#D5C6B3]"} px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]`;
+
+  // Links to /book-marketing#inquiry-desk (Contact, Privacy) open straight at the form,
+  // after the global scroll-to-top on navigation has run.
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash !== "#inquiry-desk") return undefined;
+    const timer = setTimeout(() => {
+      document.getElementById("inquiry-desk")?.scrollIntoView({ behavior: "smooth" });
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [hash]);
 
   const scrollToForm = () => {
     document.getElementById("inquiry-desk")?.scrollIntoView({ behavior: "smooth" });
@@ -207,44 +212,44 @@ export default function MarketingPage() {
       </section>
 
       {/* =========================================================
-          VERIFIABLE PERFORMANCE METRICS STRIP
+          SERVICE HIGHLIGHTS STRIP
       ========================================================= */}
       <section className="bg-[#F2ECE0] border-b border-[#E3D7C5] py-8">
         <div className="max-w-7xl mx-auto px-6 sm:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div className="border-l border-[#D5C6B3] pl-5 sm:pl-6">
               <span className="block text-2xl sm:text-[28px] font-bold font-serif-heading text-[#241A15]">
-                $2.4M+
+                ISBN
               </span>
               <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#735F50] mt-1 block font-medium leading-relaxed">
-                Managed Book Sales and Ad Spend
+                Assignment, Barcodes and Legal Deposit
               </span>
             </div>
 
             <div className="border-l border-[#D5C6B3] pl-5 sm:pl-6">
               <span className="block text-2xl sm:text-[28px] font-bold font-serif-heading text-[#241A15]">
-                40,000+
+                POD
               </span>
               <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#735F50] mt-1 block font-medium leading-relaxed">
-                Global Retail and Library Outlets
+                Print-on-Demand and Wholesale Distribution
               </span>
             </div>
 
             <div className="border-l border-[#D5C6B3] pl-5 sm:pl-6">
               <span className="block text-2xl sm:text-[28px] font-bold font-serif-heading text-[#241A15]">
-                430+
+                PPC
               </span>
               <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#735F50] mt-1 block font-medium leading-relaxed">
-                Category Number One Bestsellers
+                Amazon Advertising and A+ Content
               </span>
             </div>
 
             <div className="border-l border-[#D5C6B3] pl-5 sm:pl-6">
               <span className="block text-2xl sm:text-[28px] font-bold font-serif-heading text-[#241A15]">
-                185,000+
+                90-Day
               </span>
               <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#735F50] mt-1 block font-medium leading-relaxed">
-                Direct Bibliophile Subscribers
+                Structured Launch Campaign Blueprint
               </span>
             </div>
           </div>
@@ -561,7 +566,7 @@ export default function MarketingPage() {
                 </ul>
               </div>
               <div className="mt-6 pt-3.5 border-t border-[#EADECE] text-[10px] font-bold text-[#8C2D19] uppercase tracking-wider font-editorial-caps">
-                Over 40,000 Retailers
+                Global Retail Distribution
               </div>
             </div>
           </div>
@@ -876,9 +881,9 @@ export default function MarketingPage() {
                   Why Reviews Dictate Amazon Ad Efficiency
                 </h3>
                 <p className="font-serif-body text-xs sm:text-sm text-[#5C4A3E] leading-relaxed sm:leading-7 mb-6">
-                  Amazon PPC algorithms directly monitor customer conversion rates. A book page with fewer than 15 reviews
-                  converts at an average of 4.8%. Once a title reaches 25 verified customer reviews with an average score above
-                  4.2 stars, conversion rates jump to 14.6%, cutting your customer acquisition cost by more than half.
+                  Amazon advertising performance depends on how well a book page converts browsers into buyers. Pages with
+                  few customer reviews tend to convert less efficiently, so building a base of genuine reader reviews before
+                  scaling ad spend helps every advertising dollar work harder.
                 </p>
                 <div className="pt-5 border-t border-[#D5C6B3] flex justify-between items-center text-xs text-[#7A6758] font-editorial-caps font-bold">
                   <span>PRE-LAUNCH ARC CAMPAIGNS</span>
@@ -941,7 +946,7 @@ export default function MarketingPage() {
                     Amazon PPC, A+ Content, and BSR Ranking
                   </h3>
                   <p className="font-serif-body text-xs sm:text-sm text-[#5A4A3F] leading-relaxed sm:leading-7 mb-5">
-                    Amazon represents over 68% of global book sales. We deploy exact ASIN targeting,
+                    For most authors, Amazon is the primary sales channel. We deploy exact ASIN targeting,
                     negative keyword pruning, and custom visual A+ Content modules to turn passive views
                     into compounding royalty income.
                   </p>
@@ -1009,11 +1014,11 @@ export default function MarketingPage() {
                     Direct Reader Sponsorships and Newsletters
                   </h3>
                   <p className="font-serif-body text-xs sm:text-sm text-[#5A4A3F] leading-relaxed sm:leading-7 mb-5">
-                    Introduce your titles to over 185,000 verified readers who regularly invest in
+                    Introduce your titles to readers who regularly invest in
                     hardcover editions, signed publications, and new literary voices.
                   </p>
                   <div className="p-4 sm:p-5 bg-[#F2ECE0] border-l-2 border-[#8C2D19] text-xs font-serif-body text-[#4D3F35] leading-relaxed">
-                    Our newsletters achieve an authenticated 46.2% open rate, outperforming industry averages.
+                    Placements are matched to your genre and target readership in each campaign proposal.
                   </div>
                 </div>
 
@@ -1220,7 +1225,7 @@ export default function MarketingPage() {
 
               <p className="font-serif-body text-xs sm:text-sm text-[#5A4A3F] mt-5 leading-relaxed sm:leading-7">
                 Every title possesses unique commercial potential. Share your ASIN, current Amazon rank,
-                and campaign objectives. Our marketing strategists will audit your listing within 24 hours.
+                and campaign objectives. Our marketing strategists will review your listing and reply with next steps.
               </p>
 
               <div className="mt-9 border-t border-[#E3D7C5] pt-6 space-y-3.5 text-xs font-serif-body">
@@ -1236,49 +1241,76 @@ export default function MarketingPage() {
             </div>
 
             <div className="lg:col-span-7 bg-[#FCFAF6] border border-[#DDD0BF] p-7 sm:p-9">
-              <form onSubmit={handleFormSubmit} noValidate>
+              <form onSubmit={handleFormSubmit} noValidate aria-busy={isSubmitting}>
+                {/* Honeypot: hidden from people and assistive tech; bots that fill it are discarded on the server. */}
+                <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+                  <label>
+                    Website
+                    <input
+                      type="text"
+                      name={HONEYPOT_FIELD}
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </label>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
+                    <label htmlFor="inquiry-authorOrPublisher" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
                       Author or Press Name *
                     </label>
                     <input
+                      id="inquiry-authorOrPublisher"
                       type="text"
                       name="authorOrPublisher"
                       value={form.authorOrPublisher}
                       onChange={update}
                       placeholder="e.g. Oxford Literary Press"
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("authorOrPublisher")}
+                      aria-invalid={Boolean(invalidFields.authorOrPublisher)}
+                      maxLength={150}
+                      autoComplete="organization"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
+                    <label htmlFor="inquiry-contactName" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
                       Lead Contact Name *
                     </label>
                     <input
+                      id="inquiry-contactName"
                       type="text"
                       name="contactName"
                       value={form.contactName}
                       onChange={update}
                       placeholder="Your full name"
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("contactName")}
+                      aria-invalid={Boolean(invalidFields.contactName)}
+                      maxLength={100}
+                      autoComplete="name"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
+                    <label htmlFor="inquiry-email" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
                       Email Address *
                     </label>
                     <input
+                      id="inquiry-email"
                       type="email"
                       name="email"
                       value={form.email}
                       onChange={update}
                       placeholder="editor@press.com"
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("email")}
+                      aria-invalid={Boolean(invalidFields.email)}
+                      maxLength={254}
+                      autoComplete="email"
                       required
                     />
                   </div>
@@ -1286,7 +1318,7 @@ export default function MarketingPage() {
                   {/* FIELD 1: EXPLICITLY OPTIONAL */}
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22]">
+                      <label htmlFor="inquiry-amazonLinkOrAsin" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22]">
                         Amazon ASIN, ISBN, or Book URL
                       </label>
                       <span className="text-[10px] text-[#8C2D19] font-serif-body font-semibold italic">
@@ -1294,91 +1326,90 @@ export default function MarketingPage() {
                       </span>
                     </div>
                     <input
+                      id="inquiry-amazonLinkOrAsin"
                       type="text"
                       name="amazonLinkOrAsin"
                       value={form.amazonLinkOrAsin}
                       onChange={update}
                       placeholder="B0XXXXXXXX or Amazon URL (Leave blank if unpublished)"
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("amazonLinkOrAsin")}
+                      aria-invalid={Boolean(invalidFields.amazonLinkOrAsin)}
+                      maxLength={500}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
+                    <label htmlFor="inquiry-targetMarket" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
                       Target Marketplace
                     </label>
                     <select
+                      id="inquiry-targetMarket"
                       name="targetMarket"
                       value={form.targetMarket}
                       onChange={update}
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("targetMarket")}
+                      aria-invalid={Boolean(invalidFields.targetMarket)}
                     >
-                      <option>Amazon US and Canada</option>
-                      <option>Amazon UK and Europe</option>
-                      <option>Global Worldwide Rollout</option>
-                      <option>Direct Author Store and Amazon</option>
+                      <option value="">Select…</option>
+                      {TARGET_MARKETS.map((option) => (
+                        <option key={option}>{option}</option>
+                      ))}
                     </select>
                   </div>
 
                   {/* FIELD 2: COMPREHENSIVE DROPDOWN WITH ALL SERVICES */}
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
+                    <label htmlFor="inquiry-primaryService" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
                       Primary Service Requirement
                     </label>
                     <select
+                      id="inquiry-primaryService"
                       name="primaryService"
                       value={form.primaryService}
                       onChange={update}
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("primaryService")}
+                      aria-invalid={Boolean(invalidFields.primaryService)}
                     >
-                      <option>Full-Service Book Publishing and Print Production</option>
-                      <option>Official ISBN Assignment and Barcode Generation</option>
-                      <option>Print-on-Demand (POD) Setup and Global Distribution</option>
-                      <option>Editorial Development and Manuscript Proofreading</option>
-                      <option>Interior Typesetting and Book Architecture</option>
-                      <option>Cover Design and Print Finishes</option>
-                      <option>Global Distribution (IngramSpark, B&N, Waterstones)</option>
-                      <option>Amazon Book Marketing and Backend SEO</option>
-                      <option>Amazon Advertising (PPC, Video, and DSP)</option>
-                      <option>Amazon A+ Content and Brand Story Architecture</option>
-                      <option>Structured Launch Campaigns (Pre-Order to Bestseller Surge)</option>
-                      <option>Social Media Marketing (BookTok, Bookstagram, and Meta)</option>
-                      <option>Full-Service Advertising Account Management</option>
-                      <option>Backlist Catalog Revival and Metadata Modernization</option>
-                      <option>Editorial ARC Seeding and Advance Review Distribution</option>
-                      <option>Direct Bibliophile Newsletter and Category Takeovers</option>
-                      <option>Complete 360 Publisher Flight (All Marketing Channels)</option>
+                      <option value="">Select…</option>
+                      {PRIMARY_SERVICES.map((option) => (
+                        <option key={option}>{option}</option>
+                      ))}
                     </select>
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
+                    <label htmlFor="inquiry-monthlyBudget" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
                       Estimated Monthly Promotion Budget
                     </label>
                     <select
+                      id="inquiry-monthlyBudget"
                       name="monthlyBudget"
                       value={form.monthlyBudget}
                       onChange={update}
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("monthlyBudget")}
+                      aria-invalid={Boolean(invalidFields.monthlyBudget)}
                     >
-                      <option>Initial Test Phase ($750 to $1,500)</option>
-                      <option>Standard Growth Phase ($1,500 to $3,500)</option>
-                      <option>Bestseller Push ($3,500 to $7,500)</option>
-                      <option>Full Publisher Catalog Strategy ($7,500+)</option>
+                      <option value="">Select…</option>
+                      {MONTHLY_BUDGETS.map((option) => (
+                        <option key={option}>{option}</option>
+                      ))}
                     </select>
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
+                    <label htmlFor="inquiry-campaignNotes" className="block text-[11px] font-bold uppercase tracking-wider text-[#382B22] mb-2">
                       Book Details and Campaign Objectives *
                     </label>
                     <textarea
+                      id="inquiry-campaignNotes"
                       rows={3}
                       name="campaignNotes"
                       value={form.campaignNotes}
                       onChange={update}
                       placeholder="Specify your book genre, publishing requirements, current Amazon BSR or ACoS targets, and upcoming launch timeline..."
-                      className="w-full bg-white border border-[#D5C6B3] px-3.5 py-3 text-xs text-[#241A15] outline-none focus:border-[#8C2D19]"
+                      className={fieldClass("campaignNotes")}
+                      aria-invalid={Boolean(invalidFields.campaignNotes)}
+                      maxLength={5000}
                       required
                     />
                   </div>
@@ -1392,35 +1423,49 @@ export default function MarketingPage() {
                       checked={form.termsAccepted}
                       onChange={update}
                       className="accent-[#8C2D19] mt-0.5 w-3.5 h-3.5 shrink-0"
+                      aria-invalid={Boolean(invalidFields.termsAccepted)}
                       required
                     />
                     <span className="text-[11px] font-serif-body text-[#5A4A3F] leading-relaxed">
                       I confirm that I represent this title or publishing catalog and request a formal
-                      campaign audit and strategic proposal from the publishing team.
+                      campaign audit and strategic proposal from the publishing team. I have read the{" "}
+                      <Link to="/terms" target="_blank" className="text-[#8C2D19] underline">Terms of Use</Link>{" "}
+                      and{" "}
+                      <Link to="/privacy" target="_blank" className="text-[#8C2D19] underline">Privacy Policy</Link>. *
                     </span>
                   </label>
                 </div>
 
-                {error && (
-                  <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-800 text-xs">
-                    {error}
-                  </div>
-                )}
+                <div aria-live="polite">
+                  {errors.length > 0 && (
+                    <div role="alert" className="mt-4 p-3 bg-red-50 border border-red-200 text-red-800 text-xs">
+                      {errors.length === 1 ? (
+                        errors[0]
+                      ) : (
+                        <ul className="list-disc pl-4 space-y-1">
+                          {errors.map((message) => (
+                            <li key={message}>{message}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
 
-                {submitted && (
-                  <div className="mt-4 p-4 bg-[#EDF3E8] border border-[#B3C9A7] text-[#2F4A24]">
-                    <h4 className="font-bold text-xs">Campaign Brief Received</h4>
-                    <p className="text-xs mt-1 font-serif-body leading-relaxed">
-                      Thank you. Your proposal has been dispatched directly to our marketing desk (associatesalman@gmail.com).
-                      Our specialists will conduct an initial ASIN, keyword, and category audit and respond within 24 business hours.
-                    </p>
-                  </div>
-                )}
+                  {submitted && (
+                    <div className="mt-4 p-4 bg-[#EDF3E8] border border-[#B3C9A7] text-[#2F4A24]">
+                      <h4 className="font-bold text-xs">Campaign Brief Received</h4>
+                      <p className="text-xs mt-1 font-serif-body leading-relaxed">
+                        Thank you. Your proposal has been delivered to the Longstreet Press marketing desk.
+                        We will review your details and reply to the email address you provided.
+                      </p>
+                    </div>
+                  )}
+                </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="mt-6 bg-[#8C2D19] text-white px-7 py-3.5 text-xs font-semibold tracking-widest uppercase cursor-pointer disabled:opacity-60"
+                  className="mt-6 bg-[#8C2D19] text-white px-7 py-3.5 text-xs font-semibold tracking-widest uppercase cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Campaign Details"}
                 </button>

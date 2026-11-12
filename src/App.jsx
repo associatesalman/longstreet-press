@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Common Global Components
 import Navbar from './components/Navbar';
@@ -15,6 +15,14 @@ import RareCollectibles from './components/RareCollectibles';
 import ShopConfidence from './components/ShopConfidence';
 import Bookstores from './bookstores/Bookstores';
 import BookMarketing from './bookmarketing/bookmarketing';
+
+// Site Information Pages
+import About from './pages/site/About';
+import Contact from './pages/site/Contact';
+import Privacy from './pages/site/Privacy';
+import Terms from './pages/site/Terms';
+import AdvancedSearch from './pages/site/AdvancedSearch';
+import NotFound from './pages/site/NotFound';
 
 
 
@@ -147,8 +155,19 @@ export default function App() {
 
             
             <Route path="/bookstores" element={<Bookstores />} />
-            
- <Route path="/book-marketing" element={<BookMarketing />} />
+            <Route path="/book-marketing" element={<BookMarketing />} />
+
+            {/* Site Information */}
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/advanced-search" element={<AdvancedSearch />} />
+            {/* "Collector Support" was linked as /help; the Contact page fulfils it. */}
+            <Route path="/help" element={<Navigate to="/contact" replace />} />
+
+            {/* Unknown routes */}
+            <Route path="*" element={<NotFound />} />
 
 
              

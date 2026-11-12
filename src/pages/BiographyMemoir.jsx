@@ -1,6 +1,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import BookSearchNotice from "../components/BookSearchNotice";
+import { bookAnchorId, highlightClass, useBookHighlight } from "../lib/bookSearch";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -70,6 +72,8 @@ export default function BiographyMemoir() {
         "https://www.amazon.co.uk/Strange-Tribe-family-John-Hemingway-ebook/dp/B081ZL8YDJ?ref_=ast_author_mpb",
     },
   ];
+
+  const { query: bookQuery, match: bookMatch } = useBookHighlight(books);
 
   return (
     <div
@@ -142,13 +146,18 @@ export default function BiographyMemoir() {
 
         {/* BOOK COLLECTION */}
 
+        <BookSearchNotice query={bookQuery} match={bookMatch} />
+
+
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
 
           {books.map((book) => (
 
             <article
               key={book.id}
-              className="bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full"
+              id={bookAnchorId(book)}
+              aria-current={bookMatch?.id === book.id ? "true" : undefined}
+              className={`bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full${bookMatch?.id === book.id ? highlightClass : ""}`}
             >
 
               {/* BOOK COVER */}

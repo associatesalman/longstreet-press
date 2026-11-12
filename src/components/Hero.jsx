@@ -34,8 +34,8 @@ const BOOKS = [
     subtitle: "All 73 Books — One Story of Salvation",
     author: "Brendan Mulcahy",
     image: "/Theology, Bibles/Theology, Bibles5.jpg",
-    category: "Literary & Classic Fiction",
-    route: "/literary-classic-fiction",
+    category: "Theology, Bibles & Missals",
+    route: "/theology-bibles-missals",
   },
   {
     id: "fiction-3",

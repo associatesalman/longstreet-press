@@ -1,6 +1,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import BookSearchNotice from "../../components/BookSearchNotice";
+import { bookAnchorId, highlightClass, useBookHighlight } from "../../lib/bookSearch";
 import {
   ArrowLeft,
   BookOpen,
@@ -67,6 +69,8 @@ export default function TheologyBiblesMissals() {
       amazonUrl:
 "https://www.amazon.com/Illustrated-Catholic-Bible-Companion-Book/dp/B0HKD8QN1T/ref=sr_1_1?dib=eyJ2IjoiMSJ9.GuiL-sqyrpWAezw3kk-Sbt1TiOs_pwhxAjKZSmm7Mlf__85lLNKxi-Ctw8jRsjgbFk7eAw9HSa_RPKSip1kZoHm774cST8WhxLrd3tHbOH06PZYCPBlrgKBFSftEEnLG-xt66NZy_BKOt14MH0TPgPg5H5au7-wrnqk2U4c9pDXdf9CPavyTp7YtkLvmP-aHoDnlctq4ReVPM9igdljrc7dOo5e_txd5iyJGTjp_KFY.Ofro7bBmAOiuzlNZhjmDpmgYhYOFLb5MIofDaJ0fo88&dib_tag=se&keywords=The+Illustrated+Catholic+Bible+Companion+Brendan+Mulcahy&qid=1794427486&sr=8-1"    },
   ];
+
+  const { query: bookQuery, match: bookMatch } = useBookHighlight(books);
 
   return (
     <div
@@ -159,13 +163,18 @@ export default function TheologyBiblesMissals() {
             BOOK COLLECTION GRID
         ====================================== */}
 
+        <BookSearchNotice query={bookQuery} match={bookMatch} />
+
+
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
 
           {books.map((book) => (
 
             <article
               key={book.id}
-              className="bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full min-w-0"
+              id={bookAnchorId(book)}
+              aria-current={bookMatch?.id === book.id ? "true" : undefined}
+              className={`bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full min-w-0${bookMatch?.id === book.id ? highlightClass : ""}`}
             >
 
               {/* ======================================

@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Search,
   ChevronDown,
@@ -10,9 +10,12 @@ import {
   Landmark,
   Tag,
   ArrowUpRight,
+  Menu,
+  X,
 } from "lucide-react";
 
 import longstreetLogo from "../assets/longstreet logo.png";
+import { browseGroups, rareGroups } from "../data/siteNavigation";
 
 // ======================================================
 // ALL SEARCHABLE WEBSITE PAGES
@@ -23,60 +26,24 @@ const searchablePages = [
   { name: "Home", path: "/" },
   { name: "Book Stores", path: "/bookstores" },
   { name: "Book Marketing", path: "/book-marketing" },
-  { name: "Collector Support", path: "/help" },
+  { name: "Collector Support", path: "/contact" },
   { name: "Advanced Search Options", path: "/advanced-search" },
+  { name: "About Longstreet Press", path: "/about" },
+  { name: "Contact", path: "/contact" },
+  { name: "Privacy Policy", path: "/privacy" },
+  { name: "Terms of Use", path: "/terms" },
 
   // DROPDOWNS
   { name: "Browse Books", dropdown: "browse" },
   { name: "Rare & Antiquarian", dropdown: "rare" },
 
-  // LITERATURE & CLASSICS
-  { name: "Biography & Memoir", path: "/biography-memoir" },
-  { name: "Literary & Classic Fiction", path: "/literary-classic-fiction" },
-  { name: "Poetry & Fine Verse", path: "/poetry-fine-verse" },
-  { name: "Historical Fiction", path: "/historical-fiction" },
-  { name: "Graphic Novels & Manga", path: "/graphic-novels-manga" },
-  { name: "Romance Literature", path: "/romance-literature" },
+  // ALL CATEGORY PAGES
+  ...[...browseGroups, ...rareGroups].flatMap((group) => group.links),
+];
 
-  // THOUGHT & SCIENCE
-  { name: "Theology & Philosophy", path: "/theology-philosophy" },
-  { name: "Ancient & World History", path: "/ancient-world-history" },
-  { name: "Science Fiction & Fantasy", path: "/science-fiction-fantasy" },
-  { name: "Crime, Thriller & Mystery", path: "/crime-thriller-mystery" },
-  { name: "Humanities & Social Sciences", path: "/humanities-social-sciences" },
-  { name: "Scholarly & Educational", path: "/scholarly-educational" },
-
-  // ARTS & SPECIAL INTERESTS
-  { name: "Fine Arts & Photography", path: "/fine-arts-photography" },
-  { name: "Gastronomy & Culinary Arts", path: "/gastronomy-culinary-arts" },
-  { name: "Natural History & Wildlife", path: "/natural-history-wildlife" },
-  { name: "Hobbies, Crafts & Guilds", path: "/hobbies-crafts-guilds" },
-  { name: "Sports & Natural Pursuits", path: "/sports-natural-pursuits" },
-  { name: "Children's Illustrated", path: "/childrens-illustrated" },
-
-  // CLASSICAL RARITIES
-  { name: "Antiquarian Leatherbounds", path: "/antiquarian-leatherbounds" },
-  { name: "The Art of Fine Printing", path: "/art-fine-printing" },
-  { name: "Fine Arts & Folios", path: "/fine-arts-folios" },
-  { name: "Ancient & Medieval History", path: "/ancient-medieval-history" },
-  { name: "Law, Finance & Statecraft", path: "/law-finance-statecraft" },
-  { name: "Vintage Children's Classics", path: "/vintage-childrens-classics" },
-
-  // PERIOD TREASURES
-  { name: "Historic Cookery Treatises", path: "/historic-cookery-treatises" },
-  { name: "Pamphlets & Ephemera", path: "/pamphlets-ephemera" },
-  { name: "Oddities, Curiosa & Rarities", path: "/oddities-curiosa-rarities" },
-  { name: "Natural History & Animals", path: "/natural-history-animals" },
-  { name: "Nineteenth-Century Literature", path: "/nineteenth-century-literature" },
-  { name: "Wax Cylinders & Recordings", path: "/wax-cylinders-recordings" },
-
-  // MANUSCRIPTS & SCIENCE
-  { name: "Theology, Bibles & Missals", path: "/theology-bibles-missals" },
-  { name: "Early Science & Astronomy", path: "/early-science-astronomy" },
-  { name: "Original Hand-Signed Letters", path: "/original-hand-signed-letters" },
-  { name: "Genealogy & Noble Heraldry", path: "/genealogy-noble-heraldry" },
-  { name: "Historic Games & Sports", path: "/historic-games-sports" },
-  { name: "Vintage Maps & Atlases", path: "/vintage-maps-atlases" },
+const mobileSections = [
+  { id: "browse", title: "Browse Books", groups: browseGroups },
+  { id: "rare", title: "Rare & Antiquarian", groups: rareGroups },
 ];
 
 // ======================================================
@@ -101,8 +68,20 @@ export default function Navbar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [searchError, setSearchError] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSection, setMobileSection] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Close menus after any navigation (desktop dropdowns stay open on touch devices otherwise).
+  const [menuPath, setMenuPath] = useState(location.pathname);
+  if (menuPath !== location.pathname) {
+    setMenuPath(location.pathname);
+    setActiveDropdown(null);
+    setMobileOpen(false);
+    setMobileSection(null);
+  }
 
   // ======================================================
   // ORIGINAL DROPDOWN FUNCTION
@@ -177,7 +156,13 @@ export default function Navbar() {
     setSelectedIndex(-1);
 
     if (page.dropdown) {
-      setActiveDropdown(page.dropdown);
+      // Small screens use the mobile menu instead of the desktop mega-menu panels.
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        setMobileOpen(true);
+        setMobileSection(page.dropdown);
+      } else {
+        setActiveDropdown(page.dropdown);
+      }
     } else if (page.path) {
       setActiveDropdown(null);
       navigate(page.path);
@@ -256,6 +241,7 @@ export default function Navbar() {
       onKeyDown={(e) => {
         if (e.key === "Escape") {
           setActiveDropdown(null);
+          setMobileOpen(false);
         }
       }}
     >
@@ -268,7 +254,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
 
           <div className="tracking-widest uppercase text-gray-300">
-            LONGSTREET — The World's Premier Rare, Antiquarian & Collectible Marketplace
+            Longstreet Press — Rare, Antiquarian & Collectible Books
           </div>
 
           <div className="flex items-center gap-4 text-xs">
@@ -297,11 +283,11 @@ export default function Navbar() {
         <Link
           to="/"
           className="flex items-center shrink-0"
-          aria-label="Longstreet Home"
+          aria-label="Longstreet Press home"
         >
           <img
             src={longstreetLogo}
-            alt="Longstreet - Rare Books & Manuscripts"
+            alt="Longstreet Press"
             className="block w-auto h-auto max-h-[76px] max-w-[260px] sm:max-w-[390px] md:max-w-[480px] object-contain"
           />
         </Link>
@@ -373,7 +359,7 @@ export default function Navbar() {
 
                   {filteredPages.map((page, index) => (
                     <button
-                      key={page.path || page.dropdown}
+                      key={page.name}
                       type="button"
                       role="option"
                       aria-selected={selectedIndex === index}
@@ -438,7 +424,20 @@ export default function Navbar() {
       <div className="border-t border-[#dfd4c3] bg-[#f4eee2] relative shadow-sm">
 
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-center text-xs tracking-wider uppercase font-semibold">
-          <nav className="flex items-center justify-center gap-6 sm:gap-9">
+          {/* MOBILE MENU TOGGLE (below md) */}
+
+          <button
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            className="md:hidden py-3 flex items-center gap-2 text-[#241a15] hover:text-[#8c2d19] uppercase tracking-wider font-semibold"
+          >
+            {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {mobileOpen ? "Close Menu" : "Menu"}
+          </button>
+
+          <nav aria-label="Main" className="hidden md:flex items-center justify-center gap-6 sm:gap-9">
 
             {/* HOME */}
 
@@ -513,13 +512,83 @@ export default function Navbar() {
         </div>
 
         {/* ==================================================
+            MOBILE MENU PANEL (below md)
+        ================================================== */}
+
+        {mobileOpen && (
+          <nav
+            id="mobile-menu"
+            aria-label="Mobile"
+            className="md:hidden border-t border-[#dfd4c3] bg-[#fdfbf7] text-[13px] font-serif normal-case max-h-[75vh] overflow-y-auto"
+          >
+            <Link to="/" className="block px-6 py-3 border-b border-[#e2d7c5] text-[#241a15] font-semibold uppercase tracking-wider text-xs">
+              Home
+            </Link>
+
+            {mobileSections.map((section) => {
+              const open = mobileSection === section.id;
+              return (
+                <div key={section.id} className="border-b border-[#e2d7c5]">
+                  <button
+                    type="button"
+                    onClick={() => setMobileSection(open ? null : section.id)}
+                    aria-expanded={open}
+                    className={`w-full px-6 py-3 flex items-center justify-between uppercase tracking-wider font-semibold text-xs ${
+                      open ? "text-[#8c2d19]" : "text-[#241a15]"
+                    }`}
+                  >
+                    {section.title}
+                    <ChevronDown className={`w-3.5 h-3.5 ${open ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {open && (
+                    <div className="px-6 pb-4 space-y-4">
+                      {section.groups.map((group) => (
+                        <div key={group.heading}>
+                          <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-2 border-b border-[#e2d7c5] font-sans">
+                            {group.heading}
+                          </h5>
+                          <div className="flex flex-col text-[#45362b]">
+                            {group.links.map((link) => (
+                              <Link key={link.path} to={link.path} className="py-1.5 hover:text-[#8c2d19] hover:underline">
+                                {link.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {[
+              { name: "Bookstores", path: "/bookstores" },
+              { name: "Book Marketing", path: "/book-marketing" },
+              { name: "Advanced Search", path: "/advanced-search" },
+              { name: "About", path: "/about" },
+              { name: "Contact", path: "/contact" },
+            ].map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className="block px-6 py-3 border-b border-[#e2d7c5] text-[#241a15] hover:text-[#8c2d19] font-semibold uppercase tracking-wider text-xs"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {/* ==================================================
             BROWSE BOOKS DROPDOWN PANEL
         ================================================== */}
 
         {activeDropdown === "browse" && (
           <div
             onMouseLeave={() => setActiveDropdown(null)}
-            className="absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-[#fdfbf7] border-2 border-[#b8a68f] shadow-2xl z-50 text-xs normal-case overflow-hidden p-8"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-[#fdfbf7] border-2 border-[#b8a68f] shadow-2xl z-50 text-xs normal-case overflow-hidden p-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
@@ -696,7 +765,7 @@ export default function Navbar() {
         {activeDropdown === "rare" && (
           <div
             onMouseLeave={() => setActiveDropdown(null)}
-            className="absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-[#fdfbf7] border-2 border-[#b8a68f] shadow-2xl z-50 text-xs normal-case overflow-hidden p-8"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-[#fdfbf7] border-2 border-[#b8a68f] shadow-2xl z-50 text-xs normal-case overflow-hidden p-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 

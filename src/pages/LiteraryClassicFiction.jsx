@@ -1,6 +1,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import BookSearchNotice from "../components/BookSearchNotice";
+import { bookAnchorId, highlightClass, useBookHighlight } from "../lib/bookSearch";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -61,6 +63,8 @@ export default function LiteraryClassicFiction() {
         "https://www.amazon.com/diamantes-Diamond-Necklace-Maupassant-Translation-ebook/dp/B009Z1FBJU/ref=sr_1_1?dib=eyJ2IjoiMSJ9.MhO9Uu1hDsFNEB-KTvsCAjfGaBqZX74m6yvEh5IzUQQMjF16kMYKhh-My4_h-O0BSnwxLA4e155D4FVntgXr_FAvkRVfmleXbyQyWbBpZbUYvAwmsqs8S1-rQHrIrn7CCL7u6oF_w0e6rCO_7XUWwbuu1fv4pb91R712LPuA8ffyb3AAHudWKMgt8BlyZskusmRwiMqGPUWAv3CWVm44QsT70aF8N1rMTyxB94OvLg4.fQwFcBPIZCZ8I3PVOPkK3wJW3hANiShuY2yVxMFbzfg&dib_tag=se&keywords=El+collar+de+diamantes+Guy+de+Maupassant+Spanish&nsdOptOutParam=true&qid=1794331568&sr=8-1",
     },
   ];
+
+  const { query: bookQuery, match: bookMatch } = useBookHighlight(books);
 
   return (
     <div
@@ -138,13 +142,18 @@ export default function LiteraryClassicFiction() {
 
         {/* BOOK COLLECTION */}
 
+        <BookSearchNotice query={bookQuery} match={bookMatch} />
+
+
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
 
           {books.map((book) => (
 
             <article
               key={book.id}
-              className="bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full"
+              id={bookAnchorId(book)}
+              aria-current={bookMatch?.id === book.id ? "true" : undefined}
+              className={`bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full${bookMatch?.id === book.id ? highlightClass : ""}`}
             >
 
               {/* BOOK COVER */}

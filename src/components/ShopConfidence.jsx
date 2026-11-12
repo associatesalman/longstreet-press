@@ -1,30 +1,31 @@
 import React from 'react';
-import { Leaf, ShieldCheck, Store, CheckCircle2 } from 'lucide-react';
+import { BookOpen, ShieldCheck, Store, CheckCircle2 } from 'lucide-react';
 
 export default function ShopConfidence() {
   
-  // Data for the 3 confidence plaques
+  // Data for the 3 confidence plaques.
+  // Longstreet Press showcases books and links to Amazon; it does not sell, ship or refund orders itself.
   const features = [
     {
       id: 1,
-      badge: "Environmental Stewardship",
-      icon: <Leaf className="w-6 h-6 text-[#241a15]" />,
-      title: "Carbon Neutral Transit",
-      description: "We conscientiously calculate and completely offset carbon emissions generated on every literary shipment across the globe."
+      badge: "Curated Discovery",
+      icon: <BookOpen className="w-6 h-6 text-[#241a15]" />,
+      title: "A Thoughtfully Curated Collection",
+      description: "Browse titles organized into literary, historical, artistic and collectible categories, each with its cover, author and a direct link to its Amazon listing."
     },
     {
       id: 2,
-      badge: "The Archival Standard",
+      badge: "Purchase With Clarity",
       icon: <ShieldCheck className="w-6 h-6 text-[#c29b38]" />,
-      title: "The BLUE BOOK Guarantee",
-      description: "Shop with absolute peace of mind. Every volume is guaranteed to match its bibliographic condition notes precisely, or your investment is promptly refunded."
+      title: "Orders Handled by Amazon",
+      description: "Every View Book link opens the title on Amazon. Pricing, availability, payment, shipping and returns are handled by Amazon under its own policies."
     },
     {
       id: 3,
-      badge: "Sovereign Booksellers",
+      badge: "Authors & Publishers",
       icon: <Store className="w-6 h-6 text-[#241a15]" />,
-      title: "#fiercelyindie",
-      description: "BLUE BOOK has remained an independent, family-owned, and employee-guided literary collective since our original founding in 2003."
+      title: "Support for Authors",
+      description: "Longstreet Press also offers publishing and book marketing services. Authors and presses can request a proposal through our Book Marketing inquiry form."
     }
   ];
 
@@ -47,7 +48,7 @@ export default function ShopConfidence() {
           The Collector's Pledge
         </h2>
         <p className="text-xs text-[#6e5d50] mt-2 font-serif italic">
-          Every acquisition through BLUE BOOK is governed by our founding principles of bibliographic integrity and ethical trade.
+          Longstreet Press helps readers discover remarkable books and connects them directly to each title on Amazon.
         </p>
       </div>
 
@@ -88,7 +89,7 @@ export default function ShopConfidence() {
             {/* Bottom Seal Checkmark */}
             <div className="mt-6 pt-4 border-t border-[#e2d7c5] w-full flex items-center justify-center gap-1.5 text-[10px] text-[#7a6452] font-sans uppercase tracking-wider font-semibold">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#8c2d19]" />
-              <span>Verified Patron Standard</span>
+              <span>Longstreet Press</span>
             </div>
 
           </div>

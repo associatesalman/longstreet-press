@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import BookSearchNotice from "../components/BookSearchNotice";
+import { bookAnchorId, highlightClass, useBookHighlight } from "../lib/bookSearch";
 import { ArrowLeft, ArrowUpRight, BookOpen } from "lucide-react";
 
 export default function GraphicNovelsManga() {
@@ -50,6 +52,8 @@ export default function GraphicNovelsManga() {
         "https://www.amazon.co.uk/Demons-Angels-Graphic-Novel-ebook/dp/B07BCXKMRZ",
     },
   ];
+
+  const { query: bookQuery, match: bookMatch } = useBookHighlight(books);
 
   return (
     <div
@@ -105,12 +109,16 @@ export default function GraphicNovelsManga() {
           </div>
         </div>
 
+        <BookSearchNotice query={bookQuery} match={bookMatch} />
+
         {/* BOOK GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
           {books.map((book) => (
             <div
               key={book.id}
-              className="bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full"
+              id={bookAnchorId(book)}
+              aria-current={bookMatch?.id === book.id ? "true" : undefined}
+              className={`bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full${bookMatch?.id === book.id ? highlightClass : ""}`}
             >
               {/* BOOK IMAGE */}
               <div className="w-full h-60 bg-[#efe8db] border border-[#c7b8a3] p-2 flex items-center justify-center overflow-hidden">

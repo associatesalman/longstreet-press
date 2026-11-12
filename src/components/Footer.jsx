@@ -154,12 +154,12 @@ export default function Footer() {
               <Link
                 to="/"
                 onClick={handleFooterNavigation}
-                aria-label="Longstreet Home"
+                aria-label="Longstreet Press home"
                 className="shrink-0 flex items-center justify-center"
               >
                 <img
                   src={footerLogo}
-                  alt="Longstreet - Rare Books & Manuscripts"
+                  alt="Longstreet Press"
                   loading="lazy"
                   className="block w-auto h-auto max-w-[230px] sm:max-w-[260px] max-h-[110px] object-contain"
                 />
@@ -182,7 +182,7 @@ export default function Footer() {
                   of rare books, timeless literary classics,
                   historical treasures, fine art editions,
                   and extraordinary manuscripts.
-                  At LONGSTREET, we celebrate the beauty
+                  At Longstreet Press, we celebrate the beauty
                   of literature, the value of knowledge,
                   and the lasting legacy of the written word.
                 </p>
@@ -310,6 +310,24 @@ export default function Footer() {
               Book Marketing
             </Link>
 
+            {[
+              { name: "About", path: "/about" },
+              { name: "Contact", path: "/contact" },
+              { name: "Privacy", path: "/privacy" },
+              { name: "Terms", path: "/terms" },
+            ].map((link) => (
+              <React.Fragment key={link.path}>
+                <span>•</span>
+                <Link
+                  to={link.path}
+                  onClick={handleFooterNavigation}
+                  className="text-white no-underline"
+                >
+                  {link.name}
+                </Link>
+              </React.Fragment>
+            ))}
+
           </div>
 
           {/* OFFICE ADDRESS */}
@@ -338,7 +356,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 mt-5 pt-4 border-t border-[#333333] text-center text-[11px] text-white">
 
           <p>
-            Copyright © {new Date().getFullYear()} LONGSTREET.
+            Copyright © {new Date().getFullYear()} Longstreet Press.
             All Rights Reserved.
           </p>
 
