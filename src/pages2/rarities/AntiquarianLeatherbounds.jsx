@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  BookOpen,
   ArrowLeft,
   ArrowUpRight,
 } from "lucide-react";
@@ -64,13 +63,13 @@ export default function AntiquarianLeatherbounds() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-[#fbf8f2] text-[#2c241e] font-serif py-10 px-6">
+    <div className="w-full min-h-screen bg-[#ffffff] text-[#1f1f1f] font-serif py-10 px-6">
       <div className="max-w-7xl mx-auto">
         {/* ======================================
             BREADCRUMB NAVIGATION
         ====================================== */}
 
-        <div className="flex flex-wrap items-center gap-2 text-xs font-sans text-[#7a6452] mb-6">
+        <div className="flex flex-wrap items-center gap-2 text-xs font-sans text-[#595959] mb-6">
           <Link to="/" className="flex items-center gap-1">
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Home
@@ -89,21 +88,17 @@ export default function AntiquarianLeatherbounds() {
             PAGE HEADER
         ====================================== */}
 
-        <div className="bg-[#241a15] text-[#fbf8f2] p-8 border-2 border-[#c29b38] shadow-md mb-10 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-6">
+        <header className="border-b border-[#e5e5e5] pb-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center justify-center sm:justify-start gap-2 text-[#c29b38] text-[10px] tracking-[0.3em] uppercase font-sans font-bold mb-2">
-              <BookOpen className="w-4 h-4" />
+            <p className="text-[#8c2d19] text-[11px] font-bold tracking-[0.15em] uppercase mb-2">
+              Ghostly Folios, Fairy Tale Art & Literary Curiosities
+            </p>
 
-              <span>
-                Ghostly Folios, Fairy Tale Art & Literary Curiosities
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl font-bold font-serif">
+            <h1 className="text-3xl sm:text-4xl font-bold leading-tight">
               Antiquarian Leatherbounds
             </h1>
 
-            <p className="text-xs text-[#b8a68f] mt-2 max-w-xl font-serif italic leading-relaxed">
+            <p className="text-[14px] text-[#525252] mt-2 max-w-2xl leading-relaxed">
               Discover haunting antiquarian tales, rare literary curiosities,
               ghostly collections, maritime fiction, and vintage fairy tale
               imagery. Explore a refined selection of books inspired by old
@@ -112,16 +107,16 @@ export default function AntiquarianLeatherbounds() {
             </p>
           </div>
 
-          <div className="text-center sm:text-right shrink-0 border-t sm:border-t-0 sm:border-l border-[#3d2c23] pt-4 sm:pt-0 sm:pl-8">
-            <span className="text-xs text-[#c29b38] font-sans font-bold uppercase tracking-widest block">
-              Curated Index
+          <div className="sm:border-l border-[#e5e5e5] sm:pl-6 shrink-0">
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-[#8c2d19]">
+              In This Category
             </span>
 
-            <span className="text-2xl font-bold font-sans text-white">
+            <span className="block text-xl font-bold text-[#1f1f1f] mt-1">
               {books.length} Volumes
             </span>
           </div>
-        </div>
+        </header>
 
         {/* ======================================
             BOOK COLLECTION GRID
@@ -131,11 +126,11 @@ export default function AntiquarianLeatherbounds() {
           {books.map((book) => (
             <article
               key={book.id}
-              className="bg-[#fdfbf7] p-4 border-2 border-[#b8a68f] shadow-sm flex flex-col"
+              className="bg-[#ffffff] p-4 border border-[#e5e5e5] flex flex-col"
             >
               {/* BOOK COVER */}
 
-              <div className="w-full h-64 bg-[#efe8db] p-2 border border-[#c7b8a3] overflow-hidden mb-4 flex items-center justify-center">
+              <div className="w-full h-64 bg-[#f5f5f5] p-2 overflow-hidden mb-4 flex items-center justify-center">
                 <img
                   src={book.image}
                   alt={`${book.title} by ${book.author}`}
@@ -149,34 +144,33 @@ export default function AntiquarianLeatherbounds() {
               <div className="flex flex-col flex-1">
                 {/* CATEGORY BADGE */}
 
-                <span className="text-[9px] font-sans font-bold text-[#8c2d19] border border-[#c29b38] bg-[#fbf8f2] px-2 py-1 uppercase tracking-wide inline-block self-start mb-3">
+                <span className="text-[11px] font-semibold text-[#8c2d19] uppercase tracking-wide leading-snug inline-block self-start mb-2">
                   {book.format}
                 </span>
 
                 {/* BOOK TITLE */}
 
-                <h3 className="text-base font-bold text-[#241a15] leading-snug line-clamp-4 min-h-[110px]">
+                <h3 className="text-base font-bold text-[#1f1f1f] leading-snug line-clamp-4 min-h-[110px]">
                   {book.title}
                 </h3>
 
                 {/* AUTHOR NAME */}
 
-                <p className="text-xs text-[#7a6452] italic mt-2 leading-relaxed">
+                <p className="text-xs text-[#595959] italic mt-2 leading-relaxed">
                   by {book.author}
                 </p>
 
                 {/* AMAZON VIEW BOOK BUTTON */}
 
                 <div className="mt-auto pt-5">
-                  <div className="border-t border-[#e2d7c5] pt-4">
+                  <div className="border-t border-[#e5e5e5] pt-4">
                     <a
                       href={book.amazonUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Find ${book.title} on Amazon`}
-                      className="w-full bg-[#241a15] text-[#fbf8f2] text-xs font-sans font-bold py-3 px-4 uppercase tracking-wider flex items-center justify-center gap-2"
+                      className="w-full rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold py-2.5 px-3 flex items-center justify-center gap-2 no-underline"
                     >
-                      <BookOpen size={15} />
                       View Book
                       <ArrowUpRight size={15} />
                     </a>
@@ -187,19 +181,6 @@ export default function AntiquarianLeatherbounds() {
           ))}
         </div>
 
-        {/* ======================================
-            BOTTOM DIVIDER
-        ====================================== */}
-
-        <div className="flex items-center justify-center gap-4 mt-16">
-          <span className="h-[1px] w-full bg-[#d6c7b2]" />
-
-          <span className="text-[#8c7355] text-xs whitespace-nowrap">
-            ♦ ♦ ♦
-          </span>
-
-          <span className="h-[1px] w-full bg-[#d6c7b2]" />
-        </div>
       </div>
     </div>
   );

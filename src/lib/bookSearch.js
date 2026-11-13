@@ -56,4 +56,4 @@ export function useBookHighlight(books) {
 }
 
 /** Extra classes for the highlighted card. */
-export const highlightClass = " ring-4 ring-[#c29b38] ring-offset-2 ring-offset-[#fbf8f2]";
+export const highlightClass = " ring-2 ring-[#8c2d19] ring-offset-2 ring-offset-white";

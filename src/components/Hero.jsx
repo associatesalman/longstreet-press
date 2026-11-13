@@ -3,8 +3,6 @@ import React, { useMemo, useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Search,
-  Compass,
-  BookMarked,
   BookOpen,
   ArrowUpRight,
   X,
@@ -199,9 +197,9 @@ function SearchResult({ book, onClick }) {
     <button
       type="button"
       onClick={() => onClick(book)}
-      className="w-full flex items-center gap-3 text-left px-3 py-3 bg-[#fdfbf7] border-b border-[#e2d7c5] hover:bg-[#efe8db]"
+      className="w-full flex items-center gap-3 text-left px-3 py-3 bg-[#ffffff] border-b border-[#e5e5e5] hover:bg-[#f5f5f5]"
     >
-      <div className="w-12 h-16 shrink-0 border border-[#c7b8a3] bg-[#efe8db] p-1 flex items-center justify-center overflow-hidden">
+      <div className="w-12 h-16 shrink-0 bg-[#f5f5f5] p-1 flex items-center justify-center overflow-hidden">
         {!imageFailed ? (
           <img
             src={book.image}
@@ -211,22 +209,22 @@ function SearchResult({ book, onClick }) {
             onError={() => setImageFailed(true)}
           />
         ) : (
-          <BookOpen size={20} className="text-[#8c7355]" />
+          <BookOpen size={20} className="text-[#595959]" />
         )}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="font-serif font-bold text-[13px] leading-snug text-[#241a15]">
+        <p className="font-serif font-bold text-[13px] leading-snug text-[#1f1f1f]">
           {book.title}
         </p>
 
         {book.author && (
-          <p className="text-[11px] text-[#8a593f] italic mt-1">
+          <p className="text-[11px] text-[#595959] italic mt-1">
             by {book.author}
           </p>
         )}
 
-        <p className="text-[10px] text-[#8c7355] mt-1">
+        <p className="text-[11px] text-[#595959] mt-1">
           {book.category}
         </p>
       </div>
@@ -380,7 +378,7 @@ export default function Hero() {
 
         {/* HERO IMAGE */}
 
-        <div className="w-full h-80 sm:h-[420px] lg:h-[450px] bg-[#241a15] overflow-hidden border-2 border-[#b8a68f] shadow-md relative">
+        <div className="w-full h-80 sm:h-[420px] lg:h-[450px] bg-[#1f1f1f] overflow-hidden relative">
 
           <img
             src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -400,24 +398,16 @@ export default function Hero() {
 
         <div
           ref={searchRef}
-          className="lg:absolute lg:right-8 lg:top-8 w-full lg:w-[420px] bg-[#fdfbf7] p-7 shadow-2xl border-2 border-[#b8a68f] z-20 mt-6 lg:mt-0"
+          className="lg:absolute lg:right-8 lg:top-8 w-full lg:w-[420px] bg-white p-7 border border-[#e5e5e5] lg:shadow-md z-20 mt-6 lg:mt-0"
         >
 
-          <div className="flex items-center gap-2 mb-2">
-            <Compass className="w-4 h-4 text-[#8c2d19]" />
-
-            <span className="text-[10px] tracking-[0.2em] uppercase font-sans font-bold text-[#8c7355]">
-              Curated Book Collection
-            </span>
-          </div>
-
-          <h3 className="text-xl font-bold text-[#241a15] leading-snug mb-2">
+          <h3 className="text-xl font-bold text-[#1f1f1f] leading-snug mb-2">
             Find Your Next Book
           </h3>
 
-          <p className="text-xs text-[#6e5d50] mb-5 font-sans leading-relaxed">
-            Search our collection by book title or author.
-            Select a matching book to open its collection.
+          <p className="text-[13px] text-[#595959] mb-5 font-sans leading-relaxed">
+            Search by title or author, then choose a book
+            to see it in its category.
           </p>
 
           <form
@@ -431,7 +421,7 @@ export default function Hero() {
             <div>
               <label
                 htmlFor="hero-search-author"
-                className="block text-[11px] font-bold uppercase text-[#7a6452] mb-2"
+                className="block text-[13px] font-semibold text-[#404040] mb-1.5"
               >
                 Author Name
               </label>
@@ -445,7 +435,7 @@ export default function Hero() {
                   if (hasSearch) setShowSuggestions(true);
                 }}
                 placeholder="Enter author name..."
-                className="w-full border border-[#c7b8a3] bg-[#fbf8f2] px-3 py-3 text-[13px] text-[#241a15] outline-none focus:border-[#8c2d19] font-serif"
+                className="w-full rounded border border-[#949494] bg-white text-[#1f1f1f] outline-none focus:border-[#8c2d19] focus:ring-2 focus:ring-[#8c2d19]/30 px-3 py-2.5 text-[14px] font-serif"
               />
             </div>
 
@@ -454,7 +444,7 @@ export default function Hero() {
             <div>
               <label
                 htmlFor="hero-search-title"
-                className="block text-[11px] font-bold uppercase text-[#7a6452] mb-2"
+                className="block text-[13px] font-semibold text-[#404040] mb-1.5"
               >
                 Book Title
               </label>
@@ -468,23 +458,24 @@ export default function Hero() {
                   if (hasSearch) setShowSuggestions(true);
                 }}
                 placeholder="Enter book title..."
-                className="w-full border border-[#c7b8a3] bg-[#fbf8f2] px-3 py-3 text-[13px] text-[#241a15] outline-none focus:border-[#8c2d19] font-serif"
+                className="w-full rounded border border-[#949494] bg-white text-[#1f1f1f] outline-none focus:border-[#8c2d19] focus:ring-2 focus:ring-[#8c2d19]/30 px-3 py-2.5 text-[14px] font-serif"
               />
             </div>
 
             {/* LIVE SUGGESTIONS */}
 
             {showSuggestions && hasSearch && (
-              <div className="border border-[#c7b8a3] bg-white shadow-lg">
+              <div className="border border-[#e5e5e5] bg-white shadow-sm">
 
-                <div className="flex items-center justify-between px-3 py-2 bg-[#efe8db] border-b border-[#d6c7b2]">
-                  <span className="text-[10px] uppercase font-bold text-[#8c2d19]">
-                    {matchingBooks.length} Matching Books
+                <div className="flex items-center justify-between px-3 py-2 bg-[#f5f5f5] border-b border-[#e5e5e5]">
+                  <span className="text-[12px] font-semibold text-[#404040]">
+                    {matchingBooks.length} matching {matchingBooks.length === 1 ? "book" : "books"}
                   </span>
 
                   <button
                     type="button"
                     aria-label="Close suggestions"
+                    className="text-[#595959] hover:text-[#1f1f1f]"
                     onClick={() => setShowSuggestions(false)}
                   >
                     <X size={15} />
@@ -502,7 +493,7 @@ export default function Hero() {
                       />
                     ))
                   ) : (
-                    <p className="px-3 py-4 text-xs text-[#7a6452]">
+                    <p className="px-3 py-4 text-xs text-[#595959]">
                       No matching books found.
                     </p>
                   )}
@@ -510,7 +501,7 @@ export default function Hero() {
                 </div>
 
                 {matchingBooks.length > 6 && (
-                  <p className="text-[10px] px-3 py-2 bg-[#fbf8f2] text-[#7a6452]">
+                  <p className="text-[11px] px-3 py-2 bg-white text-[#595959] border-t border-[#e5e5e5]">
                     Showing 6 suggestions. Click Find Books
                     to see all matches.
                   </p>
@@ -522,9 +513,9 @@ export default function Hero() {
             {/* SELECTED BOOK */}
 
             {selectedBook && (
-              <div className="border border-[#c29b38] bg-[#f4eee2] px-3 py-3">
+              <div className="bg-[#f5f5f5] px-3 py-3">
 
-                <p className="text-[10px] font-bold uppercase text-[#8c2d19]">
+                <p className="text-[12px] font-semibold text-[#8c2d19]">
                   Selected Book
                 </p>
 
@@ -532,7 +523,7 @@ export default function Hero() {
                   {selectedBook.title}
                 </p>
 
-                <p className="text-[11px] text-[#7a6452] mt-1">
+                <p className="text-[11px] text-[#595959] mt-1">
                   {selectedBook.category}
                 </p>
 
@@ -544,7 +535,7 @@ export default function Hero() {
             {error && (
               <p
                 role="alert"
-                className="text-xs text-[#a02a17] bg-[#fff4ee] border border-[#e1b3a5] px-3 py-2"
+                className="text-[13px] text-[#a02a17] bg-[#fdf2f0] px-3 py-2"
               >
                 {error}
               </p>
@@ -552,19 +543,19 @@ export default function Hero() {
 
             {/* BUTTONS */}
 
-            <div className="flex items-center justify-between gap-3 pt-4 mt-1 border-t border-[#e2d7c5]">
+            <div className="flex items-center justify-between gap-3 pt-4 mt-1 border-t border-[#e5e5e5]">
 
               <button
                 type="button"
                 onClick={clearSearch}
-                className="text-xs text-[#8c2d19] underline underline-offset-4"
+                className="text-[13px] text-[#8c2d19] underline underline-offset-4 hover:text-[#6e2312]"
               >
                 Clear Search
               </button>
 
               <button
                 type="submit"
-                className="bg-[#8c2d19] text-[#fbf8f2] text-xs font-bold py-3 px-6 uppercase tracking-widest flex items-center gap-2"
+                className="rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold py-2.5 px-5 flex items-center gap-2"
               >
                 <Search size={15} />
                 Find Books
@@ -577,7 +568,7 @@ export default function Hero() {
           {/* MULTIPLE RESULTS */}
 
           {showResults && (
-            <div className="mt-5 border-t border-[#d6c7b2] pt-4">
+            <div className="mt-5 border-t border-[#e5e5e5] pt-4">
 
               <div className="flex items-center justify-between mb-3">
 
@@ -588,6 +579,7 @@ export default function Hero() {
                 <button
                   type="button"
                   aria-label="Close results"
+                  className="text-[#595959] hover:text-[#1f1f1f]"
                   onClick={() => setShowResults(false)}
                 >
                   <X size={16} />
@@ -595,7 +587,7 @@ export default function Hero() {
 
               </div>
 
-              <div className="border border-[#e2d7c5] max-h-[300px] overflow-y-auto">
+              <div className="border border-[#e5e5e5] max-h-[300px] overflow-y-auto">
 
                 {matchingBooks.map((book) => (
                   <SearchResult
@@ -616,52 +608,32 @@ export default function Hero() {
 
         <div className="mt-8 max-w-xl lg:max-w-2xl text-left">
 
-          <div className="inline-flex items-center gap-1.5 bg-[#efe8db] text-[#8c2d19] text-[10px] font-sans font-bold tracking-widest uppercase px-2.5 py-1 mb-2.5 border border-[#d6c7b2]">
-            <BookMarked size={14} />
-            <span>Curator's Spotlight • Literary Collection</span>
-          </div>
+          <p className="text-[12px] font-sans font-semibold uppercase tracking-wide text-[#8c2d19] mb-2">
+            Featured Collection
+          </p>
 
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#241a15] leading-tight">
-            Discover Stories Worth Remembering
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1f1f1f] leading-tight">
+            Stories Worth Remembering
           </h2>
 
-          <p className="text-sm text-[#5c4a3e] mt-2.5 leading-relaxed">
-            Discover historical fiction, classic literature,
-            illustrated adventures, and compelling personal
-            memoirs. Explore books that celebrate imagination,
-            storytelling, and remarkable human experiences.
+          <p className="text-sm text-[#595959] mt-2.5 leading-relaxed">
+            Historical fiction, classic literature, illustrated
+            adventures, and personal memoirs: books that celebrate
+            imagination, storytelling, and remarkable lives.
           </p>
 
           <div className="mt-4">
             <Link
               to="/literary-classic-fiction"
-              className="inline-flex items-center gap-2 border-2 border-[#8c2d19] text-[#8c2d19] text-xs font-sans font-bold px-5 py-2 uppercase tracking-widest"
+              className="inline-flex items-center gap-2 rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold font-sans px-5 py-2.5 no-underline"
             >
-              Explore Collection
+              Browse the collection
               <ArrowUpRight size={14} />
             </Link>
           </div>
 
-          <div className="flex items-center gap-2.5 mt-6">
-            <span className="w-3 h-3 rounded-full bg-[#8c2d19]" />
-            {[1, 2, 3, 4].map((item) => (
-              <span
-                key={item}
-                className="w-2.5 h-2.5 rounded-full bg-[#b8a68f]"
-              />
-            ))}
-          </div>
-
         </div>
 
-      </div>
-
-      {/* DIVIDER */}
-
-      <div className="mt-12 flex items-center justify-center gap-4">
-        <span className="h-px w-full bg-[#d6c7b2]" />
-        <span className="text-[#8c7355] text-sm">♦</span>
-        <span className="h-px w-full bg-[#d6c7b2]" />
       </div>
 
     </section>

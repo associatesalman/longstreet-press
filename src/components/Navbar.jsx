@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Search,
   ChevronDown,
-  BookOpen,
   Gift,
   Truck,
   Landmark,
@@ -237,7 +236,7 @@ export default function Navbar() {
 
   return (
     <header
-      className="w-full bg-[#fbf8f2] text-[#2c241e] border-b-2 border-[#d6c7b2] font-serif"
+      className="w-full bg-white text-[#1f1f1f] border-b border-[#e5e5e5] font-serif"
       onKeyDown={(e) => {
         if (e.key === "Escape") {
           setActiveDropdown(null);
@@ -250,21 +249,21 @@ export default function Navbar() {
           1. TOP ANNOUNCEMENT BAR
       ================================================== */}
 
-      <div className="bg-[#241a15] text-[#e8dfcf] text-[11px] py-1.5 px-6 border-b border-[#c29b38] font-sans">
+      <div className="bg-[#f5f5f5] text-[#525252] text-[12px] py-1.5 px-6 border-b border-[#e5e5e5] font-sans">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
 
-          <div className="tracking-widest uppercase text-gray-300">
+          <div>
             Longstreet Press — Rare, Antiquarian & Collectible Books
           </div>
 
           <div className="flex items-center gap-4 text-xs">
-            <span className="text-[#c29b38] font-semibold tracking-wide">
+            <span>
   A World of Timeless Stories
 </span>
 
-            <span className="text-gray-500">|</span>
+            <span className="text-[#a3a3a3]" aria-hidden="true">|</span>
 
-            <div className="flex items-center gap-1 font-semibold text-[#e8dfcf]">
+            <div className="flex items-center gap-1">
               <span>USD ($)</span>
             </div>
           </div>
@@ -301,7 +300,7 @@ export default function Navbar() {
           <form
             onSubmit={handleSearch}
             role="search"
-            className="flex border-2 border-[#b8a68f] bg-white rounded-none shadow-inner"
+            className="flex border border-[#949494] bg-white rounded overflow-hidden focus-within:border-[#8c2d19] focus-within:ring-2 focus-within:ring-[#8c2d19]/30"
           >
             <input
               type="text"
@@ -322,7 +321,7 @@ export default function Navbar() {
                 setShowSuggestions(false);
               }}
               placeholder="Search pages, categories..."
-              className="px-3 py-1.5 text-xs w-64 sm:w-80 md:w-96 outline-none text-[#241a15] placeholder-stone-400 bg-transparent font-serif"
+              className="px-3 py-2 text-[13px] w-64 sm:w-80 md:w-96 outline-none text-[#1f1f1f] placeholder-[#737373] bg-transparent font-serif"
               aria-label="Search website pages"
               aria-autocomplete="list"
               aria-expanded={
@@ -334,7 +333,7 @@ export default function Navbar() {
 
             <button
               type="submit"
-              className="bg-[#382b22] hover:bg-[#241a15] px-4 flex items-center justify-center text-[#e8dfcf]"
+              className="bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] px-4 flex items-center justify-center text-white focus-visible:outline-offset-[-4px] focus-visible:outline-white"
               aria-label="Search"
             >
               <Search className="w-3.5 h-3.5" />
@@ -349,12 +348,12 @@ export default function Navbar() {
             <div
               id="navbar-search-results"
               role="listbox"
-              className="absolute top-[40px] left-0 w-full bg-[#fdfbf7] border-2 border-[#b8a68f] shadow-xl z-[100] max-h-[320px] overflow-y-auto"
+              className="absolute top-[42px] left-0 w-full bg-white border border-[#e5e5e5] rounded shadow-md z-[100] max-h-[320px] overflow-y-auto"
             >
               {filteredPages.length > 0 ? (
                 <>
-                  <div className="px-3 py-2 text-[10px] uppercase tracking-wider font-bold text-[#8c2d19] border-b border-[#e2d7c5]">
-                    Matching Pages ({filteredPages.length})
+                  <div className="px-3 py-2 text-[12px] font-semibold text-[#595959] border-b border-[#e5e5e5]">
+                    Matching pages ({filteredPages.length})
                   </div>
 
                   {filteredPages.map((page, index) => (
@@ -367,15 +366,15 @@ export default function Navbar() {
                         e.preventDefault();
                       }}
                       onClick={() => openPage(page)}
-                      className={`w-full flex items-center gap-3 px-3 py-3 text-left border-b border-[#eee5d9] text-[12px] ${
+                      className={`w-full flex items-center gap-3 px-3 py-3 text-left border-b border-[#e5e5e5] text-[12px] ${
                         selectedIndex === index
-                          ? "bg-[#efe8db] text-[#8c2d19]"
-                          : "bg-[#fdfbf7] text-[#241a15]"
+                          ? "bg-[#f5f5f5] text-[#8c2d19]"
+                          : "bg-white text-[#1f1f1f] hover:bg-[#f5f5f5]"
                       }`}
                     >
                       <Search
                         size={13}
-                        className="text-[#8c7355] shrink-0"
+                        className="text-[#595959] shrink-0"
                       />
 
                       <span className="flex-1 font-semibold">
@@ -384,13 +383,13 @@ export default function Navbar() {
 
                       <ArrowUpRight
                         size={13}
-                        className="text-[#8c7355] shrink-0"
+                        className="text-[#595959] shrink-0"
                       />
                     </button>
                   ))}
                 </>
               ) : (
-                <div className="px-4 py-4 text-[12px] text-[#7a6452]">
+                <div className="px-4 py-4 text-[12px] text-[#595959]">
                   No matching pages found.
                 </div>
               )}
@@ -409,9 +408,9 @@ export default function Navbar() {
 
           <Link
             to="/advanced-search"
-            className="text-[11px] text-[#8c2d19] hover:underline font-serif italic pr-1"
+            className="text-[12px] text-[#8c2d19] underline-offset-2 hover:underline font-serif pr-1"
           >
-            * Advanced Search Options
+            Advanced search
           </Link>
 
         </div>
@@ -421,7 +420,7 @@ export default function Navbar() {
           3. NAVIGATION BAR
       ================================================== */}
 
-      <div className="border-t border-[#dfd4c3] bg-[#f4eee2] relative shadow-sm">
+      <div className="border-t border-[#e5e5e5] bg-white relative">
 
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-center text-xs tracking-wider uppercase font-semibold">
           {/* MOBILE MENU TOGGLE (below md) */}
@@ -431,7 +430,7 @@ export default function Navbar() {
             onClick={() => setMobileOpen((open) => !open)}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
-            className="md:hidden py-3 flex items-center gap-2 text-[#241a15] hover:text-[#8c2d19] uppercase tracking-wider font-semibold"
+            className="md:hidden py-3 flex items-center gap-2 text-[#1f1f1f] hover:text-[#8c2d19] uppercase tracking-wider font-semibold"
           >
             {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             {mobileOpen ? "Close Menu" : "Menu"}
@@ -443,7 +442,7 @@ export default function Navbar() {
 
             <Link
               to="/"
-              className="py-3 text-[#241a15] hover:text-[#8c2d19]"
+              className="py-3 text-[#1f1f1f] hover:text-[#8c2d19]"
             >
               Home
             </Link>
@@ -461,7 +460,7 @@ export default function Navbar() {
                 className={`py-3 flex items-center gap-1 hover:text-[#8c2d19] ${
                   activeDropdown === "browse"
                     ? "text-[#8c2d19] border-b-2 border-[#8c2d19]"
-                    : "text-[#241a15]"
+                    : "text-[#1f1f1f]"
                 }`}
               >
                 Browse Books
@@ -482,7 +481,7 @@ export default function Navbar() {
                 className={`py-3 flex items-center gap-1 hover:text-[#8c2d19] ${
                   activeDropdown === "rare"
                     ? "text-[#8c2d19] border-b-2 border-[#8c2d19]"
-                    : "text-[#241a15]"
+                    : "text-[#1f1f1f]"
                 }`}
               >
                 Rare & Antiquarian
@@ -494,7 +493,7 @@ export default function Navbar() {
 
             <Link
               to="/bookstores"
-              className="py-3 text-[#241a15] hover:text-[#8c2d19]"
+              className="py-3 text-[#1f1f1f] hover:text-[#8c2d19]"
             >
               Bookstores
             </Link>
@@ -503,7 +502,7 @@ export default function Navbar() {
 
             <Link
               to="/book-marketing"
-              className="py-3 text-[#241a15] hover:text-[#8c2d19]"
+              className="py-3 text-[#1f1f1f] hover:text-[#8c2d19]"
             >
               Book Marketing
             </Link>
@@ -519,22 +518,22 @@ export default function Navbar() {
           <nav
             id="mobile-menu"
             aria-label="Mobile"
-            className="md:hidden border-t border-[#dfd4c3] bg-[#fdfbf7] text-[13px] font-serif normal-case max-h-[75vh] overflow-y-auto"
+            className="md:hidden border-t border-[#e5e5e5] bg-[#ffffff] text-[13px] font-serif normal-case max-h-[75vh] overflow-y-auto"
           >
-            <Link to="/" className="block px-6 py-3 border-b border-[#e2d7c5] text-[#241a15] font-semibold uppercase tracking-wider text-xs">
+            <Link to="/" className="block px-6 py-3 border-b border-[#e5e5e5] text-[#1f1f1f] font-semibold uppercase tracking-wider text-xs">
               Home
             </Link>
 
             {mobileSections.map((section) => {
               const open = mobileSection === section.id;
               return (
-                <div key={section.id} className="border-b border-[#e2d7c5]">
+                <div key={section.id} className="border-b border-[#e5e5e5]">
                   <button
                     type="button"
                     onClick={() => setMobileSection(open ? null : section.id)}
                     aria-expanded={open}
                     className={`w-full px-6 py-3 flex items-center justify-between uppercase tracking-wider font-semibold text-xs ${
-                      open ? "text-[#8c2d19]" : "text-[#241a15]"
+                      open ? "text-[#8c2d19]" : "text-[#1f1f1f]"
                     }`}
                   >
                     {section.title}
@@ -545,10 +544,10 @@ export default function Navbar() {
                     <div className="px-6 pb-4 space-y-4">
                       {section.groups.map((group) => (
                         <div key={group.heading}>
-                          <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-2 border-b border-[#e2d7c5] font-sans">
+                          <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#1f1f1f] pb-2 mb-2 border-b border-[#e5e5e5] font-sans">
                             {group.heading}
                           </h5>
-                          <div className="flex flex-col text-[#45362b]">
+                          <div className="flex flex-col text-[#404040]">
                             {group.links.map((link) => (
                               <Link key={link.path} to={link.path} className="py-1.5 hover:text-[#8c2d19] hover:underline">
                                 {link.name}
@@ -573,7 +572,7 @@ export default function Navbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className="block px-6 py-3 border-b border-[#e2d7c5] text-[#241a15] hover:text-[#8c2d19] font-semibold uppercase tracking-wider text-xs"
+                className="block px-6 py-3 border-b border-[#e5e5e5] text-[#1f1f1f] hover:text-[#8c2d19] font-semibold uppercase tracking-wider text-xs"
               >
                 {link.name}
               </Link>
@@ -588,18 +587,18 @@ export default function Navbar() {
         {activeDropdown === "browse" && (
           <div
             onMouseLeave={() => setActiveDropdown(null)}
-            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-[#fdfbf7] border-2 border-[#b8a68f] shadow-2xl z-50 text-xs normal-case overflow-hidden p-8"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-white border border-[#e5e5e5] shadow-md z-50 text-xs normal-case overflow-hidden p-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
               {/* COLUMN 1: LITERATURE & CLASSICS */}
 
               <div>
-                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-3 border-b border-[#e2d7c5] font-sans">
+                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#1f1f1f] pb-2 mb-3 border-b border-[#e5e5e5] font-sans">
                   Literature & Classics
                 </h5>
 
-                <div className="flex flex-col gap-2 text-[#45362b]">
+                <div className="flex flex-col gap-2 text-[#404040]">
 
                   <Link
                     to="/biography-memoir"
@@ -649,11 +648,11 @@ export default function Navbar() {
               {/* COLUMN 2: THOUGHT & SCIENCE */}
 
               <div>
-                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-3 border-b border-[#e2d7c5] font-sans">
+                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#1f1f1f] pb-2 mb-3 border-b border-[#e5e5e5] font-sans">
                   Thought & Science
                 </h5>
 
-                <div className="flex flex-col gap-2 text-[#45362b]">
+                <div className="flex flex-col gap-2 text-[#404040]">
 
                   <Link
                     to="/theology-philosophy"
@@ -703,11 +702,11 @@ export default function Navbar() {
               {/* COLUMN 3: ARTS & SPECIAL INTERESTS */}
 
               <div>
-                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-3 border-b border-[#e2d7c5] font-sans">
+                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#1f1f1f] pb-2 mb-3 border-b border-[#e5e5e5] font-sans">
                   Arts & Special Interests
                 </h5>
 
-                <div className="flex flex-col gap-2 text-[#45362b]">
+                <div className="flex flex-col gap-2 text-[#404040]">
 
                   <Link
                     to="/fine-arts-photography"
@@ -765,18 +764,18 @@ export default function Navbar() {
         {activeDropdown === "rare" && (
           <div
             onMouseLeave={() => setActiveDropdown(null)}
-            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-[#fdfbf7] border-2 border-[#b8a68f] shadow-2xl z-50 text-xs normal-case overflow-hidden p-8"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full w-full max-w-5xl bg-white border border-[#e5e5e5] shadow-md z-50 text-xs normal-case overflow-hidden p-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
               {/* COLUMN 1: CLASSICAL RARITIES */}
 
               <div>
-                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-3 border-b border-[#e2d7c5] font-sans">
+                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#1f1f1f] pb-2 mb-3 border-b border-[#e5e5e5] font-sans">
                   Classical Rarities
                 </h5>
 
-                <div className="flex flex-col gap-2 text-[#45362b]">
+                <div className="flex flex-col gap-2 text-[#404040]">
 
                   <Link
                     to="/antiquarian-leatherbounds"
@@ -826,11 +825,11 @@ export default function Navbar() {
               {/* COLUMN 2: PERIOD TREASURES */}
 
               <div>
-                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-3 border-b border-[#e2d7c5] font-sans">
+                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#1f1f1f] pb-2 mb-3 border-b border-[#e5e5e5] font-sans">
                   Period Treasures
                 </h5>
 
-                <div className="flex flex-col gap-2 text-[#45362b]">
+                <div className="flex flex-col gap-2 text-[#404040]">
 
                   <Link
                     to="/historic-cookery-treatises"
@@ -880,11 +879,11 @@ export default function Navbar() {
               {/* COLUMN 3: MANUSCRIPTS & SCIENCE */}
 
               <div>
-                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-3 border-b border-[#e2d7c5] font-sans">
+                <h5 className="text-[11px] tracking-wider uppercase font-bold text-[#1f1f1f] pb-2 mb-3 border-b border-[#e5e5e5] font-sans">
                   Manuscripts & Science
                 </h5>
 
-                <div className="flex flex-col gap-2 text-[#45362b]">
+                <div className="flex flex-col gap-2 text-[#404040]">
 
                   <Link
                     to="/theology-bibles-missals"

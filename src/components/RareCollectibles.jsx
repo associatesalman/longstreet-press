@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 // ======================================================
 // RARE COLLECTIBLES
@@ -224,8 +224,8 @@ function BookCover({
   return (
     <div
       className={`
-        bg-[#efe8db]
-        border border-[#c7b8a3]
+        bg-[#f5f5f5]
+        border border-[#e5e5e5]
         p-2 overflow-hidden
         flex items-center justify-center
         ${className}
@@ -256,17 +256,8 @@ function ViewBookButton({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`View ${book.title} on Amazon`}
-      className={`
-        inline-flex items-center justify-center
-        gap-2 min-h-11 px-5 py-3
-        bg-[#241a15] text-[#fbf8f2]
-        text-[11px] font-sans font-bold
-        uppercase tracking-wider
-        text-center no-underline
-        ${fullWidth ? "w-full" : ""}
-      `}
+      className={`inline-flex items-center justify-center gap-2 min-h-11 px-5 py-2.5 font-sans text-center no-underline rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold ${fullWidth ? "w-full" : ""}`}
     >
-      <BookOpen size={15} />
       View Book
       <ArrowUpRight size={15} />
     </a>
@@ -279,7 +270,7 @@ function ViewBookButton({
 
 function CategoryLabel({ children }) {
   return (
-    <span className="inline-block self-start text-[10px] font-sans font-bold uppercase text-[#8c2d19] border border-[#c29b38] px-2 py-1 leading-snug">
+    <span className="inline-block self-start text-[11px] font-sans font-semibold uppercase text-[#8c2d19] leading-snug tracking-wide">
       {children}
     </span>
   );
@@ -292,7 +283,7 @@ function CategoryLabel({ children }) {
 export default function RareCollectibles() {
   return (
     <main
-      className="w-full bg-[#fbf8f2] text-[#241a15]"
+      className="w-full bg-[#ffffff] text-[#1f1f1f]"
       style={{
         fontFamily: "Georgia, 'Times New Roman', serif",
       }}
@@ -307,36 +298,34 @@ export default function RareCollectibles() {
 
           {/* HEADER */}
 
-          <div className="bg-[#241a15] text-[#fbf8f2] p-6 sm:p-8 border-2 border-[#c29b38] mb-7">
+          <div className="mb-7">
 
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
 
               <div className="max-w-3xl">
 
-                <p className="text-[#c29b38] text-[10px] font-sans font-bold uppercase tracking-[0.2em] mb-3">
-                  Illustrated Literature Collection
+                <p className="text-[#8c2d19] text-[12px] font-sans font-semibold uppercase tracking-wide mb-2">
+                  Illustrated Literature
                 </p>
 
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
                   Graphic Novels & Illustrated Adventures
                 </h2>
 
-                <p className="text-sm text-[#d1c1ac] leading-7 mt-4">
-                  Explore graphic storytelling, fantasy
-                  adaptations, Japanese manga, and
-                  illustrated adventures. Discover
-                  memorable characters, imaginative
-                  fictional worlds, and stories brought
-                  to life through visual creativity.
+                <p className="text-sm text-[#595959] leading-7 mt-3">
+                  Graphic storytelling, fantasy adaptations,
+                  Japanese manga, and illustrated adventures,
+                  with memorable characters and imaginative
+                  worlds brought to life through art.
                 </p>
 
               </div>
 
               <Link
                 to="/graphic-novels-manga"
-                className="shrink-0 border border-[#c29b38] text-[#f3d9a3] px-5 py-3 text-xs font-sans font-bold uppercase tracking-wide text-center"
+                className="shrink-0 text-[14px] font-sans font-semibold text-[#8c2d19] underline underline-offset-4 hover:text-[#6e2312]"
               >
-                Explore All Graphic Novels
+                See all graphic novels
               </Link>
 
             </div>
@@ -350,14 +339,8 @@ export default function RareCollectibles() {
             {comicBooks.map((book) => (
               <article
                 key={book.id}
-                className="bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full min-w-0"
+                className="bg-[#ffffff] border border-[#e5e5e5] p-3 flex flex-col h-full min-w-0"
               >
-
-                <div className="border-b border-[#e2d7c5] pb-2 mb-3">
-                  <span className="text-[10px] font-sans font-bold text-[#8c2d19] tracking-widest">
-                    {book.entry}
-                  </span>
-                </div>
 
                 <BookCover
                   book={book}
@@ -370,20 +353,20 @@ export default function RareCollectibles() {
                     {book.format}
                   </CategoryLabel>
 
-                  <h3 className="text-[17px] font-bold text-[#241a15] mt-3 leading-snug">
+                  <h3 className="text-[17px] font-bold text-[#1f1f1f] mt-3 leading-snug">
                     {book.title}
                   </h3>
 
-                  <p className="text-[13px] text-[#8a593f] italic mt-2 leading-snug">
+                  <p className="text-[13px] text-[#595959] italic mt-2 leading-snug">
                     by {book.author}
                   </p>
 
-                  <p className="text-[12px] text-[#5c4a3e] mt-3 leading-6">
+                  <p className="text-[12px] text-[#595959] mt-3 leading-6">
                     {book.description}
                   </p>
 
                   <div className="mt-auto pt-5">
-                    <div className="border-t border-[#e2d7c5] pt-3">
+                    <div>
                       <ViewBookButton
                         book={book}
                         fullWidth
@@ -404,26 +387,24 @@ export default function RareCollectibles() {
             SECTION 2 — UPDATED COLLECTOR'S LIBRARY
         ========================================== */}
 
-        <section className="bg-[#f4eee2] border-2 border-[#b8a68f] p-5 sm:p-8">
+        <section>
 
-          <div className="border-b-2 border-[#d6c7b2] pb-5 mb-7">
+          <div className="mb-7">
 
-            <p className="text-[#8c2d19] font-sans font-bold text-[10px] uppercase tracking-[0.2em] mb-3">
-              The Collector's Library
+            <p className="text-[#8c2d19] font-sans font-semibold text-[12px] uppercase tracking-wide mb-2">
+              Collector's Library
             </p>
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#241a15]">
-              Discover Literature, History & Illustrated Editions
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1f1f1f]">
+              Literature, History & Illustrated Editions
             </h2>
 
-            <p className="text-sm text-[#6e5d50] leading-7 mt-3 max-w-3xl">
-              Discover thoughtfully selected works that
-              connect historical storytelling, literary
-              heritage, religious traditions, and
-              illustrated publishing. Explore books
-              that offer distinctive perspectives
-              on culture, literature, and the
-              human experience.
+            <p className="text-sm text-[#595959] leading-7 mt-3 max-w-3xl">
+              Selected works that connect historical
+              storytelling, literary heritage, religious
+              traditions, and illustrated publishing, each
+              with its own perspective on culture,
+              literature, and the human experience.
             </p>
 
           </div>
@@ -434,7 +415,7 @@ export default function RareCollectibles() {
 
             {/* BOOK 1 — VESTA */}
 
-            <article className="bg-[#fdfbf7] border border-[#c7b8a3] p-4 sm:p-5 flex flex-col">
+            <article className="bg-white border border-[#e5e5e5] p-4 sm:p-5 flex flex-col">
 
               <div className="flex flex-col sm:flex-row gap-5 flex-1 items-start">
 
@@ -445,11 +426,7 @@ export default function RareCollectibles() {
 
                 <div className="flex-1 min-w-0">
 
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-wide text-[#8c2d19] mb-3">
-                    Featured Historical Fiction
-                  </p>
-
-                  <CategoryLabel>
+                                    <CategoryLabel>
                     {fictionBooks[0].format}
                   </CategoryLabel>
 
@@ -457,15 +434,15 @@ export default function RareCollectibles() {
                     {fictionBooks[0].title}
                   </h3>
 
-                  <p className="text-[12px] text-[#756052] mt-2">
+                  <p className="text-[12px] text-[#595959] mt-2">
                     {fictionBooks[0].subtitle}
                   </p>
 
-                  <p className="text-[13px] text-[#8a593f] italic mt-2">
+                  <p className="text-[13px] text-[#595959] italic mt-2">
                     by {fictionBooks[0].author}
                   </p>
 
-                  <p className="text-[13px] text-[#5c4a3e] mt-3 leading-6">
+                  <p className="text-[13px] text-[#595959] mt-3 leading-6">
                     {fictionBooks[0].description}
                   </p>
 
@@ -473,7 +450,7 @@ export default function RareCollectibles() {
 
               </div>
 
-              <div className="mt-5 pt-3 border-t border-[#d6c7b2]">
+              <div className="mt-5">
                 <ViewBookButton
                   book={fictionBooks[0]}
                   fullWidth
@@ -484,7 +461,7 @@ export default function RareCollectibles() {
 
             {/* BOOK 2 — ILLUSTRATED CATHOLIC BIBLE */}
 
-            <article className="bg-[#fdfbf7] border border-[#c7b8a3] p-4 sm:p-5 flex flex-col">
+            <article className="bg-white border border-[#e5e5e5] p-4 sm:p-5 flex flex-col">
 
               <div className="flex flex-col sm:flex-row gap-5 flex-1 items-start">
 
@@ -495,11 +472,7 @@ export default function RareCollectibles() {
 
                 <div className="flex-1 min-w-0">
 
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-wide text-[#8c2d19] mb-3">
-                    Featured Illustrated Edition
-                  </p>
-
-                  <CategoryLabel>
+                                    <CategoryLabel>
                     {fictionBooks[1].format}
                   </CategoryLabel>
 
@@ -507,15 +480,15 @@ export default function RareCollectibles() {
                     {fictionBooks[1].title}
                   </h3>
 
-                  <p className="text-[12px] text-[#756052] mt-2">
+                  <p className="text-[12px] text-[#595959] mt-2">
                     {fictionBooks[1].subtitle}
                   </p>
 
-                  <p className="text-[13px] text-[#8a593f] italic mt-2">
+                  <p className="text-[13px] text-[#595959] italic mt-2">
                     by {fictionBooks[1].author}
                   </p>
 
-                  <p className="text-[13px] text-[#5c4a3e] mt-3 leading-6">
+                  <p className="text-[13px] text-[#595959] mt-3 leading-6">
                     {fictionBooks[1].description}
                   </p>
 
@@ -523,7 +496,7 @@ export default function RareCollectibles() {
 
               </div>
 
-              <div className="mt-5 pt-3 border-t border-[#d6c7b2]">
+              <div className="mt-5">
                 <ViewBookButton
                   book={fictionBooks[1]}
                   fullWidth
@@ -538,9 +511,9 @@ export default function RareCollectibles() {
 
             <Link
               to="/literary-classic-fiction"
-              className="inline-block text-[#8c2d19] font-sans text-xs font-bold uppercase underline underline-offset-4"
+              className="inline-block text-[#8c2d19] font-sans text-[14px] font-semibold underline underline-offset-4 hover:text-[#6e2312]"
             >
-              Explore Literary Collections
+              Browse literary collections
             </Link>
 
           </div>
@@ -555,33 +528,32 @@ export default function RareCollectibles() {
 
           {/* HEADING */}
 
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 border-b-2 border-[#b8a68f] pb-5 mb-7">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-7">
 
             <div className="max-w-3xl">
 
-              <p className="text-[#8c2d19] font-sans font-bold text-[10px] uppercase tracking-[0.2em] mb-3">
-                Lives, Legacies & Personal Journeys
+              <p className="text-[#8c2d19] font-sans font-semibold text-[12px] uppercase tracking-wide mb-2">
+                Lives & Personal Journeys
               </p>
 
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#241a15] leading-tight">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1f1f1f] leading-tight">
                 Biographies, Memoirs & Remarkable Lives
               </h2>
 
-              <p className="text-sm text-[#6e5d50] leading-7 mt-3">
-                Step into the lives and experiences
-                of notable public figures and individuals
-                whose personal journeys offer insight
-                into history, ambition, identity,
-                culture, and human experience.
+              <p className="text-sm text-[#595959] leading-7 mt-3">
+                The lives and experiences of public
+                figures and individuals whose journeys
+                offer insight into history, ambition,
+                identity, and culture.
               </p>
 
             </div>
 
             <Link
               to="/biography-memoir"
-              className="text-xs font-sans font-bold text-[#8c2d19] underline underline-offset-4 shrink-0"
+              className="text-[14px] font-sans font-semibold text-[#8c2d19] underline underline-offset-4 hover:text-[#6e2312] shrink-0"
             >
-              Explore Biography & Memoir
+              See all biography & memoir
             </Link>
 
           </div>
@@ -594,7 +566,7 @@ export default function RareCollectibles() {
 
               <article
                 key={book.id}
-                className="bg-[#fdfbf7] border-2 border-[#b8a68f] p-4 sm:p-5 flex flex-col sm:flex-row gap-5"
+                className="bg-[#ffffff] border border-[#e5e5e5] p-4 sm:p-5 flex flex-col sm:flex-row gap-5"
               >
 
                 <BookCover
@@ -604,26 +576,22 @@ export default function RareCollectibles() {
 
                 <div className="flex-1 min-w-0 flex flex-col">
 
-                  <span className="text-[10px] font-sans font-bold tracking-widest text-[#8c2d19]">
-                    {book.entry}
-                  </span>
-
-                  <div className="mt-3">
+                  <div>
                     <CategoryLabel>
                       {book.format}
                     </CategoryLabel>
                   </div>
 
-                  <h3 className="text-xl font-bold text-[#241a15] mt-3 leading-tight">
+                  <h3 className="text-xl font-bold text-[#1f1f1f] mt-3 leading-tight">
                     {book.title}
                   </h3>
 
-                  <p className="text-[13px] text-[#8a593f] italic mt-2">
+                  <p className="text-[13px] text-[#595959] italic mt-2">
                     by {book.author}
                   </p>
 
                   <div className="mt-auto pt-5">
-                    <div className="border-t border-[#e2d7c5] pt-3">
+                    <div>
                       <ViewBookButton book={book} />
                     </div>
                   </div>
@@ -644,20 +612,8 @@ export default function RareCollectibles() {
 
               <article
                 key={book.id}
-                className="bg-[#fdfbf7] border-2 border-[#b8a68f] p-4 flex flex-col h-full"
+                className="bg-[#ffffff] border border-[#e5e5e5] p-4 flex flex-col h-full"
               >
-
-                <div className="flex justify-between gap-3 border-b border-[#e2d7c5] pb-3 mb-4">
-
-                  <span className="text-[10px] font-sans font-bold text-[#8c2d19] tracking-widest">
-                    {book.entry}
-                  </span>
-
-                  <span className="text-[10px] font-sans uppercase text-[#8f8174]">
-                    Featured Reading
-                  </span>
-
-                </div>
 
                 <BookCover
                   book={book}
@@ -670,16 +626,16 @@ export default function RareCollectibles() {
                     {book.format}
                   </CategoryLabel>
 
-                  <h3 className="text-lg font-bold text-[#241a15] mt-3 leading-snug">
+                  <h3 className="text-lg font-bold text-[#1f1f1f] mt-3 leading-snug">
                     {book.title}
                   </h3>
 
-                  <p className="text-sm text-[#8a593f] italic mt-2">
+                  <p className="text-sm text-[#595959] italic mt-2">
                     by {book.author}
                   </p>
 
                   <div className="mt-auto pt-5">
-                    <div className="border-t border-[#e2d7c5] pt-3">
+                    <div>
                       <ViewBookButton
                         book={book}
                         fullWidth
@@ -703,9 +659,9 @@ export default function RareCollectibles() {
 
         <section>
 
-          <div className="border-b-2 border-[#b8a68f] pb-4 mb-6">
+          <div className="mb-7">
 
-            <p className="text-[#8c2d19] text-[10px] font-sans font-bold tracking-[0.2em] uppercase mb-2">
+            <p className="text-[#8c2d19] text-[12px] font-sans font-semibold tracking-wide uppercase mb-2">
               Literary Heritage
             </p>
 
@@ -713,11 +669,10 @@ export default function RareCollectibles() {
               Classics, Music & Timeless Short Fiction
             </h2>
 
-            <p className="text-sm text-[#6e5d50] mt-3 leading-7 max-w-3xl">
-              Explore classic English literature,
-              contemporary literary expression,
-              and celebrated short fiction through
-              a selection of distinctive works.
+            <p className="text-sm text-[#595959] mt-3 leading-7 max-w-3xl">
+              Classic English literature, contemporary
+              literary writing, and celebrated short
+              fiction.
             </p>
 
           </div>
@@ -730,7 +685,7 @@ export default function RareCollectibles() {
 
               <article
                 key={book.id}
-                className="bg-[#fdfbf7] border-2 border-[#b8a68f] p-4 flex flex-col h-full"
+                className="bg-[#ffffff] border border-[#e5e5e5] p-4 flex flex-col h-full"
               >
 
                 <div className="flex flex-col sm:flex-row md:flex-col xl:flex-row gap-4 flex-1 items-start">
@@ -746,21 +701,21 @@ export default function RareCollectibles() {
                       {book.format}
                     </CategoryLabel>
 
-                    <h3 className="text-lg font-bold text-[#241a15] leading-snug mt-3">
+                    <h3 className="text-lg font-bold text-[#1f1f1f] leading-snug mt-3">
                       {book.title}
                     </h3>
 
                     {book.subtitle && (
-                      <p className="text-xs text-[#756052] mt-2">
+                      <p className="text-xs text-[#595959] mt-2">
                         {book.subtitle}
                       </p>
                     )}
 
-                    <p className="text-[13px] text-[#8a593f] italic mt-2">
+                    <p className="text-[13px] text-[#595959] italic mt-2">
                       by {book.author}
                     </p>
 
-                    <p className="text-[12px] text-[#5c4a3e] mt-3 leading-6">
+                    <p className="text-[12px] text-[#595959] mt-3 leading-6">
                       {book.description}
                     </p>
 
@@ -769,7 +724,7 @@ export default function RareCollectibles() {
                 </div>
 
                 <div className="mt-auto pt-5">
-                  <div className="border-t border-[#e2d7c5] pt-3">
+                  <div>
                     <ViewBookButton
                       book={book}
                       fullWidth
@@ -787,9 +742,9 @@ export default function RareCollectibles() {
 
             <Link
               to="/literary-classic-fiction"
-              className="inline-flex items-center gap-2 text-xs font-sans font-bold uppercase text-[#8c2d19] underline underline-offset-4"
+              className="inline-flex items-center gap-2 text-[14px] font-sans font-semibold text-[#8c2d19] underline underline-offset-4 hover:text-[#6e2312]"
             >
-              Explore All Literary Classics
+              See all literary classics
               <ArrowUpRight size={14} />
             </Link>
 
@@ -797,21 +752,6 @@ export default function RareCollectibles() {
 
         </section>
 
-        {/* ==========================================
-            BOTTOM DIVIDER
-        ========================================== */}
-
-        <div className="flex items-center gap-3">
-
-          <span className="h-px flex-1 bg-[#d6c7b2]" />
-
-          <span className="text-[#8c7355] text-xs">
-            ♦ ♦ ♦
-          </span>
-
-          <span className="h-px flex-1 bg-[#d6c7b2]" />
-
-        </div>
 
       </div>
     </main>

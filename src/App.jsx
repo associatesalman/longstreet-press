@@ -13,6 +13,7 @@ import Hero from './components/Hero';
 import BookCategories from './components/BookCategories';
 import RareCollectibles from './components/RareCollectibles';
 import ShopConfidence from './components/ShopConfidence';
+import OurStory from './components/OurStory';
 import Bookstores from './bookstores/Bookstores';
 import BookMarketing from './bookmarketing/bookmarketing';
 
@@ -80,6 +81,7 @@ function HomePage() {
   return (
     <>
       <Hero />
+      <OurStory />
       <BookCategories />
       <RareCollectibles />
       <ShopConfidence />
@@ -90,7 +92,7 @@ function HomePage() {
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-[#fbf8f2] flex flex-col font-serif">
+      <div className="min-h-screen bg-white flex flex-col font-serif">
         
         {/* 1. Global Header Navigation */}
         <Navbar />

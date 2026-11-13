@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import InfoPage, { InfoSection } from "./InfoPage";
 
-const linkClass = "text-[#8c2d19] underline";
+const linkClass = "text-[#8c2d19] underline hover:text-[#6e2312]";
 const LEGAL_LAST_UPDATED = "November 12, 2026";
 
 /** Describes only what this website actually does with information. */

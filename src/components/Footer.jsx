@@ -1,10 +1,7 @@
 
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  ShieldCheck,
-  MapPin,
-} from "lucide-react";
+import { MapPin } from "lucide-react";
 
 import footerLogo from "../assets/footer logo.png";
 
@@ -169,22 +166,16 @@ export default function Footer() {
 
               <div className="flex-1">
 
-                <span className="text-[10px] tracking-[0.2em] uppercase text-white font-sans font-bold block mb-2">
-                  Rare Books • Timeless Literature • Collectible Editions
-                </span>
-
                 <h3 className="text-2xl font-bold text-white leading-snug">
                   Preserving Stories, Inspiring Generations
                 </h3>
 
-                <p className="text-[13px] text-white mt-2 leading-relaxed max-w-xl italic">
-                  Discover a thoughtfully curated collection
-                  of rare books, timeless literary classics,
-                  historical treasures, fine art editions,
-                  and extraordinary manuscripts.
-                  At Longstreet Press, we celebrate the beauty
-                  of literature, the value of knowledge,
-                  and the lasting legacy of the written word.
+                <p className="text-[14px] text-[#d4d4d4] mt-2 leading-relaxed max-w-xl">
+                  A curated collection of rare books, literary
+                  classics, historical works, fine art editions,
+                  and manuscripts. At Longstreet Press, we
+                  celebrate literature, knowledge, and the
+                  lasting legacy of the written word.
                 </p>
 
               </div>
@@ -211,18 +202,18 @@ export default function Footer() {
 
               <div
                 key={index}
-                className="bg-black p-5 border border-[#333333] flex flex-col"
+                className="flex flex-col"
               >
 
                 {/* COLUMN HEADING */}
 
-                <h4 className="text-[12px] font-sans font-bold uppercase tracking-wider text-white border-b border-[#333333] pb-3 mb-4">
+                <h4 className="text-[13px] font-sans font-semibold text-white mb-3">
                   {section.heading}
                 </h4>
 
                 {/* COLUMN LINKS */}
 
-                <div className="flex flex-col gap-3 font-sans text-[12px] text-white">
+                <div className="flex flex-col gap-2.5 font-sans text-[13px]">
 
                   {section.links.map((item, itemIndex) => (
 
@@ -230,17 +221,9 @@ export default function Footer() {
                       key={itemIndex}
                       to={item.path}
                       onClick={handleFooterNavigation}
-                      className="flex items-start gap-2 text-white no-underline leading-relaxed"
+                      className="text-[#d4d4d4] hover:text-white hover:underline underline-offset-2 leading-relaxed"
                     >
-
-                      <span className="text-white shrink-0">
-                        ›
-                      </span>
-
-                      <span>
-                        {item.name}
-                      </span>
-
+                      {item.name}
                     </Link>
 
                   ))}
@@ -262,21 +245,9 @@ export default function Footer() {
           3. BOTTOM FOOTER
       ================================================ */}
 
-      <div className="bg-black py-6 border-t border-[#333333] font-sans text-[11px] text-white">
+      <div className="bg-black py-6 border-t border-[#333333] font-sans text-[12px] text-[#d4d4d4]">
 
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-
-          {/* TRUST MESSAGE */}
-
-          <div className="flex items-center gap-2 border border-[#555555] px-3 py-2 text-white text-[10px] font-bold">
-
-            <ShieldCheck className="w-4 h-4 text-white" />
-
-            <span>
-              RARE BOOKS & LITERARY COLLECTIONS
-            </span>
-
-          </div>
 
           {/* BOTTOM LINKS - SUPPORT REMOVED */}
 
@@ -285,43 +256,42 @@ export default function Footer() {
             <Link
               to="/"
               onClick={handleFooterNavigation}
-              className="text-white no-underline"
+              className="text-[#d4d4d4] hover:text-white hover:underline underline-offset-2"
             >
               Home
             </Link>
 
-            <span>•</span>
+            <span aria-hidden="true">·</span>
 
             <Link
               to="/bookstores"
               onClick={handleFooterNavigation}
-              className="text-white no-underline"
+              className="text-[#d4d4d4] hover:text-white hover:underline underline-offset-2"
             >
               Bookstores
             </Link>
 
-            <span>•</span>
+            <span aria-hidden="true">·</span>
 
             <Link
               to="/book-marketing"
               onClick={handleFooterNavigation}
-              className="text-white no-underline"
+              className="text-[#d4d4d4] hover:text-white hover:underline underline-offset-2"
             >
               Book Marketing
             </Link>
 
             {[
-              { name: "About", path: "/about" },
               { name: "Contact", path: "/contact" },
               { name: "Privacy", path: "/privacy" },
               { name: "Terms", path: "/terms" },
             ].map((link) => (
               <React.Fragment key={link.path}>
-                <span>•</span>
+                <span aria-hidden="true">·</span>
                 <Link
                   to={link.path}
                   onClick={handleFooterNavigation}
-                  className="text-white no-underline"
+                  className="text-[#d4d4d4] hover:text-white hover:underline underline-offset-2"
                 >
                   {link.name}
                 </Link>
@@ -332,11 +302,11 @@ export default function Footer() {
 
           {/* OFFICE ADDRESS */}
 
-          <div className="flex items-center gap-2 text-white">
+          <div className="flex items-center gap-2">
 
-            <MapPin className="w-4 h-4 text-white shrink-0" />
+            <MapPin className="w-4 h-4 shrink-0" />
 
-            <address className="not-italic leading-relaxed text-white">
+            <address className="not-italic leading-relaxed">
               <span className="block">
                 2974 Hardman Ct NE
               </span>
@@ -353,16 +323,11 @@ export default function Footer() {
             COPYRIGHT
         ================================================ */}
 
-        <div className="max-w-7xl mx-auto px-6 mt-5 pt-4 border-t border-[#333333] text-center text-[11px] text-white">
+        <div className="max-w-7xl mx-auto px-6 mt-5 pt-4 border-t border-[#333333] text-center text-[12px] text-[#a3a3a3]">
 
           <p>
             Copyright © {new Date().getFullYear()} Longstreet Press.
             All Rights Reserved.
-          </p>
-
-          <p className="mt-2 italic text-white">
-            Celebrating Rare Books, Timeless Stories,
-            and the Written Legacy.
           </p>
 
         </div>

@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #ffffff;
+    color: #1f1f1f;
+  }
+
+  /* Visible keyboard focus for every interactive control (mouse clicks don't show it). */
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible,
+  [role="option"]:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #8c2d19;
+    outline-offset: 2px;
+  }
+
+  /* Light outline on the black footer so focus stays visible there. */
+  footer a:focus-visible,
+  footer button:focus-visible {
+    outline-color: #ffffff;
+  }
+
+  input[type="checkbox"]:focus-visible,
+  input[type="radio"]:focus-visible {
+    outline: 2px solid #8c2d19;
+    outline-offset: 2px;
+  }
+}

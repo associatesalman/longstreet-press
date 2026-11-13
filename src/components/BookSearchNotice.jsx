@@ -12,11 +12,7 @@ export default function BookSearchNotice({ query, match }) {
   return (
     <div
       role="status"
-      className={`mb-5 px-4 py-3 border text-[13px] flex flex-wrap items-center gap-2 ${
-        match
-          ? "bg-[#fdfbf7] border-[#c29b38] text-[#45362b]"
-          : "bg-[#f4eee2] border-[#b8a68f] text-[#45362b]"
-      }`}
+      className="mb-5 px-4 py-3 bg-[#f5f5f5] text-[14px] text-[#404040] flex flex-wrap items-center gap-2"
     >
       <Search size={14} className="text-[#8c2d19] shrink-0" />
       {match ? (
@@ -27,7 +23,7 @@ export default function BookSearchNotice({ query, match }) {
         <span>
           We couldn’t find <strong className="text-[#8c2d19]">“{query}”</strong> in this category. Browse the
           volumes below or try{" "}
-          <Link to="/advanced-search" className="text-[#8c2d19] underline">
+          <Link to="/advanced-search" className="text-[#8c2d19] underline hover:text-[#6e2312]">
             Advanced Search
           </Link>
           .

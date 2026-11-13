@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, Mail, MapPin, Search } from "lucide-react";
 import InfoPage, { InfoSection } from "./InfoPage";
 
-const linkClass = "text-[#8c2d19] underline";
+const linkClass = "text-[#8c2d19] underline hover:text-[#6e2312]";
 const buttonClass =
-  "bg-[#241a15] text-[#fffaf4] text-[12px] font-bold py-3 px-5 uppercase tracking-wide inline-flex items-center gap-2 no-underline";
+  "rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold py-2.5 px-5 inline-flex items-center gap-2 no-underline";
 
 /** Contact and collector support. The Book Marketing form remains the only contact form on the site. */
 export default function Contact() {

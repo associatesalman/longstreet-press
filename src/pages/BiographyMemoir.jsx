@@ -6,7 +6,6 @@ import { bookAnchorId, highlightClass, useBookHighlight } from "../lib/bookSearc
 import {
   ArrowLeft,
   ArrowUpRight,
-  BookOpen,
 } from "lucide-react";
 
 export default function BiographyMemoir() {
@@ -77,7 +76,7 @@ export default function BiographyMemoir() {
 
   return (
     <div
-      className="w-full min-h-screen bg-[#fbf8f2] text-[#241a15] px-4 sm:px-6 py-7"
+      className="w-full min-h-screen bg-[#ffffff] text-[#1f1f1f] px-4 sm:px-6 py-7"
       style={{
         fontFamily: "Georgia, 'Times New Roman', serif",
       }}
@@ -86,10 +85,10 @@ export default function BiographyMemoir() {
 
         {/* BREADCRUMB NAVIGATION */}
 
-        <nav className="flex flex-wrap items-center gap-2 text-xs text-[#7a6452] mb-5">
+        <nav className="flex flex-wrap items-center gap-2 text-xs text-[#595959] mb-5">
           <Link
             to="/"
-            className="flex items-center gap-1 text-[#7a6452] no-underline"
+            className="flex items-center gap-1 text-[#595959] no-underline"
           >
             <ArrowLeft size={14} />
             Back to Home
@@ -106,13 +105,13 @@ export default function BiographyMemoir() {
 
         {/* PAGE HEADER */}
 
-        <header className="bg-[#241a15] text-[#fbf8f2] border border-[#c29b38] px-6 py-6 mb-6">
+        <header className="border-b border-[#e5e5e5] pb-6 mb-8">
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
             <div className="flex-1">
 
-              <p className="text-[#c29b38] text-[11px] font-bold tracking-[0.15em] uppercase mb-2">
+              <p className="text-[#8c2d19] text-[11px] font-bold tracking-[0.15em] uppercase mb-2">
                 Extraordinary Lives & Personal Stories
               </p>
 
@@ -120,7 +119,7 @@ export default function BiographyMemoir() {
                 Biography & Memoir
               </h1>
 
-              <p className="text-[14px] text-[#cbb9a5] mt-2 max-w-2xl leading-relaxed">
+              <p className="text-[14px] text-[#525252] mt-2 max-w-2xl leading-relaxed">
                 Explore remarkable lives, personal memoirs,
                 historical biographies, and powerful stories
                 of perseverance, faith, and human experience.
@@ -128,13 +127,13 @@ export default function BiographyMemoir() {
 
             </div>
 
-            <div className="sm:border-l border-[#594638] sm:pl-6 shrink-0">
+            <div className="sm:border-l border-[#e5e5e5] sm:pl-6 shrink-0">
 
-              <span className="block text-[11px] font-bold uppercase tracking-wider text-[#c29b38]">
-                Curated Index
+              <span className="block text-[11px] font-bold uppercase tracking-wider text-[#8c2d19]">
+                In This Category
               </span>
 
-              <span className="block text-xl font-bold text-white mt-1">
+              <span className="block text-xl font-bold text-[#1f1f1f] mt-1">
                 {books.length} Volumes
               </span>
 
@@ -157,12 +156,12 @@ export default function BiographyMemoir() {
               key={book.id}
               id={bookAnchorId(book)}
               aria-current={bookMatch?.id === book.id ? "true" : undefined}
-              className={`bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full${bookMatch?.id === book.id ? highlightClass : ""}`}
+              className={`bg-[#ffffff] border border-[#e5e5e5] p-3 flex flex-col h-full${bookMatch?.id === book.id ? highlightClass : ""}`}
             >
 
               {/* BOOK COVER */}
 
-              <div className="w-full h-60 bg-[#efe8db] border border-[#c7b8a3] p-2 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-60 bg-[#f5f5f5] p-2 flex items-center justify-center overflow-hidden">
 
                 <img
                   src={book.image}
@@ -177,7 +176,7 @@ export default function BiographyMemoir() {
 
               <div className="mt-3">
 
-                <span className="inline-block text-[10px] font-bold uppercase leading-snug text-[#8c2d19] border border-[#c29b38] px-2 py-1">
+                <span className="inline-block text-[11px] font-semibold uppercase leading-snug text-[#8c2d19] tracking-wide">
                   {book.format}
                 </span>
 
@@ -187,18 +186,18 @@ export default function BiographyMemoir() {
 
               <div className="flex flex-col flex-1 mt-2">
 
-                <h2 className="text-[17px] font-bold text-[#241a15] leading-[1.35]">
+                <h2 className="text-[17px] font-bold text-[#1f1f1f] leading-[1.35]">
                   {book.title}
                 </h2>
 
                 {book.subtitle && (
-                  <p className="text-[12px] text-[#756052] mt-1 leading-snug">
+                  <p className="text-[12px] text-[#595959] mt-1 leading-snug">
                     {book.subtitle}
                   </p>
                 )}
 
                 {book.author && (
-                  <p className="text-[13px] text-[#8a593f] italic mt-2 leading-snug">
+                  <p className="text-[13px] text-[#595959] italic mt-2 leading-snug">
                     by {book.author}
                   </p>
                 )}
@@ -207,16 +206,15 @@ export default function BiographyMemoir() {
 
                 <div className="mt-auto pt-4">
 
-                  <div className="border-t border-[#e2d7c5] pt-3">
+                  <div className="border-t border-[#e5e5e5] pt-3">
 
                     <a
                       href={book.amazonUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Find ${book.title} on Amazon`}
-                      className="w-full bg-[#241a15] text-[#fffaf4] text-[12px] font-bold py-3 px-3 uppercase tracking-wide flex items-center justify-center gap-2 no-underline"
+                      className="w-full rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold py-2.5 px-3 flex items-center justify-center gap-2 no-underline"
                     >
-                      <BookOpen size={15} />
                       <span>View Book</span>
                       <ArrowUpRight size={15} />
                     </a>
@@ -233,19 +231,6 @@ export default function BiographyMemoir() {
 
         </section>
 
-        {/* BOTTOM DECORATION */}
-
-        <div className="flex items-center gap-3 mt-9">
-
-          <span className="h-px flex-1 bg-[#d6c7b2]" />
-
-          <span className="text-[#8c7355] text-xs">
-            ♦ ♦ ♦
-          </span>
-
-          <span className="h-px flex-1 bg-[#d6c7b2]" />
-
-        </div>
 
       </div>
     </div>

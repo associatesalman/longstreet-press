@@ -2,7 +2,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  BookOpen,
   ArrowUpRight,
 } from "lucide-react";
 
@@ -87,7 +86,7 @@ function BookImage({ book, className = "" }) {
   return (
     <div
       className={`
-        bg-[#efe8db] border border-[#c7b8a3]
+        bg-[#f5f5f5]
         p-2 flex items-center justify-center
         overflow-hidden ${className}
       `}
@@ -106,25 +105,15 @@ function BookImage({ book, className = "" }) {
 // AMAZON BUTTON
 // ======================================================
 
-function ViewBookButton({ book, gold = false }) {
+function ViewBookButton({ book }) {
   return (
     <a
       href={book.amazonUrl}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`View ${book.title} on Amazon`}
-      className={`
-        w-full h-11 flex items-center justify-center gap-2
-        px-3 text-[12px] font-sans font-bold
-        uppercase tracking-wide no-underline
-        ${
-          gold
-            ? "bg-[#c29b38] text-[#241a15]"
-            : "bg-[#241a15] text-[#fbf8f2]"
-        }
-      `}
+      className="w-full h-11 flex items-center justify-center gap-2 px-3 font-sans no-underline rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold"
     >
-      <BookOpen size={15} />
       View Book
       <ArrowUpRight size={15} />
     </a>
@@ -141,7 +130,7 @@ export default function BookCategories() {
 
   return (
     <main
-      className="w-full bg-[#fbf8f2] text-[#241a15] py-8 px-4 sm:px-6"
+      className="w-full bg-[#ffffff] text-[#1f1f1f] py-8 px-4 sm:px-6"
       style={{
         fontFamily: "Georgia, 'Times New Roman', serif",
       }}
@@ -150,20 +139,20 @@ export default function BookCategories() {
 
         {/* SECTION HEADING */}
 
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 border-b-2 border-[#b8a68f] pb-5 mb-7">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
 
           <div className="max-w-3xl">
 
-            <p className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#8c2d19] mb-3">
-              The Literary Collection
+            <p className="font-sans text-[12px] font-semibold uppercase tracking-wide text-[#8c2d19] mb-2">
+              Literary Collection
             </p>
 
             <h2 className="text-3xl sm:text-4xl font-bold leading-tight">
               Literary Classics & Timeless Stories
             </h2>
 
-            <p className="text-[14px] text-[#6e5d50] leading-7 mt-3">
-              Explore a curated selection of historical fiction,
+            <p className="text-[14px] text-[#595959] leading-7 mt-3">
+              A selection of historical fiction,
               religious literature, classic English novels,
               contemporary storytelling, and timeless short fiction.
             </p>
@@ -172,9 +161,9 @@ export default function BookCategories() {
 
           <Link
             to="/literary-classic-fiction"
-            className="shrink-0 text-[12px] font-sans font-bold text-[#8c2d19] underline underline-offset-4"
+            className="shrink-0 text-[14px] font-sans font-semibold text-[#8c2d19] underline underline-offset-4 hover:text-[#6e2312]"
           >
-            Explore All Literary Classics
+            See all literary classics
           </Link>
 
         </div>
@@ -189,30 +178,22 @@ export default function BookCategories() {
               FEATURED BOOK
           ================================================== */}
 
-          <article className="lg:col-span-5 bg-[#241a15] text-[#fbf8f2] p-5 border-2 border-[#c29b38] flex flex-col h-full">
+          <article className="lg:col-span-5 bg-[#f5f5f5] p-5 flex flex-col h-full">
 
-            <div className="flex items-center justify-between gap-3 border-b border-[#514032] pb-4 mb-5">
-
-              <span className="text-[11px] font-sans font-bold tracking-wider uppercase text-[#c29b38]">
-                Featured Literary Selection
-              </span>
-
-              <span className="text-[10px] font-sans text-[#b8a68f] whitespace-nowrap">
-                COLLECTION 01
-              </span>
-
-            </div>
+            <p className="text-[12px] font-sans font-semibold tracking-wide uppercase text-[#595959] mb-4">
+              Featured Selection
+            </p>
 
             <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-5 items-start">
 
               <BookImage
                 book={featuredBook}
-                className="w-44 h-64 shrink-0 mx-auto sm:mx-0"
+                className="w-44 h-64 shrink-0 mx-auto sm:mx-0 bg-white"
               />
 
               <div className="flex-1 min-w-0">
 
-                <span className="inline-block px-2 py-1 border border-[#c29b38] text-[#c29b38] text-[10px] font-sans font-bold uppercase leading-4">
+                <span className="inline-block text-[#8c2d19] text-[11px] font-sans font-semibold uppercase leading-4 tracking-wide">
                   {featuredBook.format}
                 </span>
 
@@ -221,16 +202,16 @@ export default function BookCategories() {
                 </h3>
 
                 {featuredBook.subtitle && (
-                  <p className="text-[14px] text-[#e5d0af] mt-2">
+                  <p className="text-[14px] text-[#525252] mt-2">
                     {featuredBook.subtitle}
                   </p>
                 )}
 
-                <p className="text-[14px] text-[#c29b38] italic mt-3">
+                <p className="text-[14px] text-[#595959] italic mt-3">
                   by {featuredBook.author}
                 </p>
 
-                <p className="text-[14px] text-[#ded0be] mt-5 leading-7">
+                <p className="text-[14px] text-[#404040] mt-5 leading-7">
                   {featuredBook.description}
                 </p>
 
@@ -242,9 +223,7 @@ export default function BookCategories() {
 
             <div className="mt-auto pt-5">
 
-              <div className="border-t border-[#514032] pt-4">
-                <ViewBookButton book={featuredBook} gold />
-              </div>
+              <ViewBookButton book={featuredBook} />
 
             </div>
 
@@ -260,7 +239,7 @@ export default function BookCategories() {
 
               <article
                 key={book.id}
-                className="bg-[#fdfbf7] border-2 border-[#b8a68f] p-4 flex flex-col h-full min-w-0"
+                className="bg-[#ffffff] border border-[#e5e5e5] p-4 flex flex-col h-full min-w-0"
               >
 
                 {/* COVER AND CONTENT */}
@@ -274,25 +253,25 @@ export default function BookCategories() {
 
                   <div className="min-w-0 flex-1">
 
-                    <span className="inline-block px-2 py-1 text-[10px] font-sans font-bold uppercase text-[#8c2d19] border border-[#c29b38] leading-4">
+                    <span className="inline-block text-[11px] font-sans font-semibold uppercase text-[#8c2d19] leading-4 tracking-wide">
                       {book.format}
                     </span>
 
-                    <h3 className="text-[17px] font-bold leading-snug mt-3 text-[#241a15]">
+                    <h3 className="text-[17px] font-bold leading-snug mt-3 text-[#1f1f1f]">
                       {book.title}
                     </h3>
 
                     {book.subtitle && (
-                      <p className="text-[12px] text-[#6e5d50] mt-2 leading-5">
+                      <p className="text-[12px] text-[#595959] mt-2 leading-5">
                         {book.subtitle}
                       </p>
                     )}
 
-                    <p className="text-[13px] text-[#8a593f] italic mt-2 leading-5">
+                    <p className="text-[13px] text-[#595959] italic mt-2 leading-5">
                       by {book.author}
                     </p>
 
-                    <p className="text-[12px] text-[#6b584a] mt-3 leading-6 line-clamp-4">
+                    <p className="text-[12px] text-[#595959] mt-3 leading-6 line-clamp-4">
                       {book.description}
                     </p>
 
@@ -304,7 +283,7 @@ export default function BookCategories() {
 
                 <div className="mt-auto pt-5">
 
-                  <div className="border-t border-[#e2d7c5] pt-4">
+                  <div className="border-t border-[#e5e5e5] pt-4">
                     <ViewBookButton book={book} />
                   </div>
 
@@ -318,13 +297,6 @@ export default function BookCategories() {
 
         </div>
 
-        {/* BOTTOM DIVIDER */}
-
-        <div className="flex items-center gap-4 mt-10">
-          <span className="h-px flex-1 bg-[#d6c7b2]" />
-          <span className="text-[#8c7355] text-xs">♦ ♦ ♦</span>
-          <span className="h-px flex-1 bg-[#d6c7b2]" />
-        </div>
 
       </div>
     </main>

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowUpRight, BookOpen, RotateCcw } from "lucide-react";
+import { ArrowUpRight, RotateCcw } from "lucide-react";
 import InfoPage, { InfoSection } from "./InfoPage";
 import { books, bookMatchesSearch, fieldMatches, getAmazonUrl } from "../../data/bookstoresCatalog";
 import { browseGroups, rareGroups } from "../../data/siteNavigation";
@@ -9,8 +9,8 @@ const ALL = "All Categories";
 const categories = [ALL, ...new Set(books.map((book) => book.category))];
 
 const inputClass =
-  "w-full bg-white border border-[#b8a68f] px-3 py-2.5 text-[13px] text-[#241a15] outline-none focus:border-[#8c2d19]";
-const labelClass = "block text-[11px] font-bold uppercase tracking-wider text-[#382b22] mb-1.5 font-sans";
+  "w-full rounded bg-white border border-[#949494] px-3 py-2.5 text-[14px] text-[#1f1f1f] outline-none focus:border-[#8c2d19] focus:ring-2 focus:ring-[#8c2d19]/30";
+const labelClass = "block text-[13px] font-semibold text-[#404040] mb-1.5 font-sans";
 
 /**
  * Advanced Search over the Bookstores catalogue (src/data/bookstoresCatalog.js),
@@ -56,7 +56,7 @@ export default function AdvancedSearch() {
       <form
         role="search"
         onSubmit={(e) => e.preventDefault()}
-        className="bg-[#fdfbf7] border-2 border-[#b8a68f] p-5 sm:p-6 mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        className="bg-[#f5f5f5] p-5 sm:p-6 mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
       >
         <div>
           <label htmlFor="as-q" className={labelClass}>Keyword</label>
@@ -79,17 +79,17 @@ export default function AdvancedSearch() {
           </select>
         </div>
         <div className="sm:col-span-2 lg:col-span-4 flex flex-wrap items-center justify-between gap-3 pt-1">
-          <p role="status" className="text-[13px] text-[#7a6452]">
+          <p role="status" className="text-[13px] text-[#595959]">
             {results.length} {results.length === 1 ? "title" : "titles"} found
           </p>
           {hasFilters && (
             <button
               type="button"
               onClick={() => setParams(new URLSearchParams(), { replace: true })}
-              className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-[#8c2d19]"
+              className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#8c2d19] hover:text-[#6e2312] hover:underline underline-offset-2"
             >
               <RotateCcw size={14} />
-              Clear Filters
+              Clear filters
             </button>
           )}
         </div>
@@ -98,29 +98,28 @@ export default function AdvancedSearch() {
       {results.length > 0 ? (
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
           {results.map((book) => (
-            <article key={`${book.asin}-${book.title}`} className="bg-[#fdfbf7] border border-[#b8a68f] p-3 flex flex-col h-full">
-              <div className="w-full h-60 bg-[#efe8db] border border-[#c7b8a3] p-2 flex items-center justify-center overflow-hidden">
+            <article key={`${book.asin}-${book.title}`} className="bg-[#ffffff] border border-[#e5e5e5] p-3 flex flex-col h-full">
+              <div className="w-full h-60 bg-[#f5f5f5] p-2 flex items-center justify-center overflow-hidden">
                 <img src={book.image} alt={`${book.title} book cover`} loading="lazy" className="w-full h-full object-contain" />
               </div>
               <div className="mt-3">
-                <span className="inline-block text-[10px] font-bold uppercase leading-snug text-[#8c2d19] border border-[#c29b38] px-2 py-1">
+                <span className="inline-block text-[11px] font-semibold uppercase leading-snug text-[#8c2d19] tracking-wide">
                   {book.category}
                 </span>
               </div>
               <div className="flex flex-col flex-1 mt-2">
-                <h2 className="text-[17px] font-bold text-[#241a15] leading-[1.35]">{book.title}</h2>
-                {book.subtitle && <p className="text-[12px] text-[#756052] mt-1 leading-snug">{book.subtitle}</p>}
-                {book.author && <p className="text-[13px] text-[#8a593f] italic mt-2 leading-snug">by {book.author}</p>}
+                <h2 className="text-[17px] font-bold text-[#1f1f1f] leading-[1.35]">{book.title}</h2>
+                {book.subtitle && <p className="text-[12px] text-[#595959] mt-1 leading-snug">{book.subtitle}</p>}
+                {book.author && <p className="text-[13px] text-[#595959] italic mt-2 leading-snug">by {book.author}</p>}
                 <div className="mt-auto pt-4">
-                  <div className="border-t border-[#e2d7c5] pt-3">
+                  <div className="border-t border-[#e5e5e5] pt-3">
                     <a
                       href={getAmazonUrl(book)}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Find ${book.title} on Amazon`}
-                      className="w-full bg-[#241a15] text-[#fffaf4] text-[12px] font-bold py-3 px-3 uppercase tracking-wide flex items-center justify-center gap-2 no-underline"
+                      className="w-full rounded bg-[#8c2d19] hover:bg-[#6e2312] active:bg-[#5a1c0f] text-white text-[14px] font-semibold py-2.5 px-3 flex items-center justify-center gap-2 no-underline"
                     >
-                      <BookOpen size={15} />
                       <span>View Book</span>
                       <ArrowUpRight size={15} />
                     </a>
@@ -139,16 +138,16 @@ export default function AdvancedSearch() {
         </InfoSection>
       )}
 
-      <section className="mt-8 bg-[#fdfbf7] border-2 border-[#b8a68f] p-5 sm:p-8">
-        <h2 className="text-xl font-bold text-[#241a15] mb-1">Browse by Category</h2>
-        <p className="text-[13px] text-[#7a6452] mb-5">Each category page shows its own curated selection.</p>
+      <section className="mt-10 border-t border-[#e5e5e5] pt-8">
+        <h2 className="text-xl font-bold text-[#1f1f1f] mb-1">Browse by Category</h2>
+        <p className="text-[13px] text-[#595959] mb-5">Each category page shows its own curated selection.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-[13px]">
           {[...browseGroups, ...rareGroups].map((group) => (
             <div key={group.heading}>
-              <h3 className="text-[11px] tracking-wider uppercase font-bold text-[#241a15] pb-2 mb-2 border-b border-[#e2d7c5] font-sans">
+              <h3 className="text-[14px] font-bold text-[#1f1f1f] mb-2">
                 {group.heading}
               </h3>
-              <div className="flex flex-col gap-1.5 text-[#45362b]">
+              <div className="flex flex-col gap-1.5 text-[#404040]">
                 {group.links.map((link) => (
                   <Link key={link.path} to={link.path} className="hover:text-[#8c2d19] hover:underline">
                     {link.name}
