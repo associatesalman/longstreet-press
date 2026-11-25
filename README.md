@@ -27,8 +27,9 @@ The form on `/book-marketing` posts JSON to `POST /api/inquiry`. The server vali
 the browser (`src/lib/inquiry.js`) and emails it over SMTP with
 [nodemailer](https://nodemailer.com/) (`server/inquiry.js`, `server/mail.js`):
 
-- **To:** `associatesalman@gmail.com`, fixed on the server (override with `CONTACT_RECIPIENT_EMAIL`). The browser
-  never sends or sees the recipient.
+- **To:** every address in `CONTACT_RECIPIENT_EMAIL` (comma-separated, e.g.
+  `support@longstreet.press,associatesalman@gmail.com`), defaulting to `associatesalman@gmail.com`. The browser
+  never sends or sees the recipients. Success requires the provider to accept every recipient.
 - **From:** `"Longstreet Press" <CONTACT_FROM_EMAIL>`, a sender address verified with your SMTP provider.
 - **Reply-To:** the visitor's validated email address.
 - Plain-text and HTML bodies listing every form field; user content is HTML-escaped and control characters are
@@ -39,7 +40,8 @@ the browser (`src/lib/inquiry.js`) and emails it over SMTP with
 
 ### Configuration
 
-Copy `.env.example` to `.env` (gitignored) for local use, or set the same variables in your host's environment
+Copy `.env.example` to `.env` (gitignored) for local use (`npm run dev`, `npm run preview` and `npm start` read
+`.env`, never `.env.example`; restart the server after editing it), or set the same variables in your host's environment
 settings. **Never prefix them with `VITE_`.**
 
 | Variable | Required | Where to get it |
@@ -50,7 +52,7 @@ settings. **Never prefix them with `VITE_`.**
 | `SMTP_PASS` | Yes | SMTP password / API key from your provider |
 | `SMTP_PORT` | No | `587` (default, STARTTLS) or `465` |
 | `SMTP_SECURE` | No | `true` only for port 465 |
-| `CONTACT_RECIPIENT_EMAIL` | No | Overrides the default recipient |
+| `CONTACT_RECIPIENT_EMAIL` | No | One or more comma-separated recipients; overrides the default |
 | `TRUST_PROXY` | No | `true` behind a reverse proxy/load balancer so rate limiting sees visitor IPs |
 | `PORT` | No | Port for `npm start` (default 3000; most hosts set it) |
 

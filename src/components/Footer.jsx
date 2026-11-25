@@ -1,13 +1,18 @@
 
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 import footerLogo from "../assets/footer logo.png";
 
 // ================================================
 // FOOTER NAVIGATION - 4 COLUMNS, 5 LINKS EACH
 // ================================================
+
+// Support email: opens the visitor's mail app To support@ with the internal inbox in CC.
+const SUPPORT_EMAIL = "support@longstreet.press";
+const SUPPORT_CC = "associatesalman@gmail.com";
+const SUPPORT_MAILTO = `mailto:${SUPPORT_EMAIL}?cc=${encodeURIComponent(SUPPORT_CC)}`;
 
 const footerSections = [
   {
@@ -300,20 +305,37 @@ export default function Footer() {
 
           </div>
 
-          {/* OFFICE ADDRESS */}
+          {/* SUPPORT EMAIL AND OFFICE ADDRESS */}
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
 
-            <MapPin className="w-4 h-4 shrink-0" />
+            <div className="flex items-center gap-2">
 
-            <address className="not-italic leading-relaxed">
-              <span className="block">
-                2974 Hardman Ct NE
-              </span>
-              <span className="block">
-                Atlanta, GA 30305-3425
-              </span>
-            </address>
+              <Mail className="w-4 h-4 shrink-0" aria-hidden="true" />
+
+              <a
+                href={SUPPORT_MAILTO}
+                className="text-[#d4d4d4] hover:text-white hover:underline underline-offset-2"
+              >
+                {SUPPORT_EMAIL}
+              </a>
+
+            </div>
+
+            <div className="flex items-center gap-2">
+
+              <MapPin className="w-4 h-4 shrink-0" />
+
+              <address className="not-italic leading-relaxed">
+                <span className="block">
+                  2974 Hardman Ct NE
+                </span>
+                <span className="block">
+                  Atlanta, GA 30305-3425
+                </span>
+              </address>
+
+            </div>
 
           </div>
 

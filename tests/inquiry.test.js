@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
+import { Readable } from "node:stream";
 import { after, before, beforeEach, describe, test } from "node:test";
 import { createInquiryHandler } from "../server/inquiry.js";
 import { createRateLimiter } from "../server/mail.js";
@@ -40,8 +41,8 @@ const mockTransport = () => ({
       error.code = "EAUTH";
       throw error;
     }
-    if (transportMode === "reject") return { accepted: [], rejected: [message.to] };
-    return { accepted: [message.to], rejected: [] };
+    if (transportMode === "reject") return { accepted: [], rejected: [message.to].flat() };
+    return { accepted: [message.to].flat(), rejected: [] };
   },
 });
 
@@ -98,7 +99,7 @@ describe("POST /api/inquiry", () => {
     assert.deepEqual(await response.json(), { ok: true });
     assert.equal(sent.length, 1);
     const [mail] = sent;
-    assert.equal(mail.to, "associatesalman@gmail.com");
+    assert.deepEqual(mail.to, ["associatesalman@gmail.com"]);
     assert.deepEqual(mail.from, { name: "Longstreet Press", address: DUMMY_ENV.CONTACT_FROM_EMAIL });
     assert.deepEqual(mail.replyTo, { name: valid.contactName, address: valid.email });
     for (const value of [valid.authorOrPublisher, valid.contactName, valid.email, valid.amazonLinkOrAsin, valid.targetMarket, valid.primaryService, valid.monthlyBudget, "Target ACoS 30%"]) {
@@ -113,7 +114,29 @@ describe("POST /api/inquiry", () => {
     process.env.CONTACT_RECIPIENT_EMAIL = "desk@example.test";
     const response = await post(valid);
     assert.equal(response.status, 200);
-    assert.equal(sent[0].to, "desk@example.test");
+    assert.deepEqual(sent[0].to, ["desk@example.test"]);
+  });
+
+  test("CONTACT_RECIPIENT_EMAIL accepts a comma-separated list: one email to every inbox", async () => {
+    process.env.CONTACT_RECIPIENT_EMAIL = " support@longstreet.press, associatesalman@gmail.com ,SUPPORT@longstreet.press";
+    const response = await post(valid);
+    assert.equal(response.status, 200);
+    assert.equal(sent.length, 1);
+    assert.deepEqual(sent[0].to, ["support@longstreet.press", "associatesalman@gmail.com"]);
+    assert.deepEqual(sent[0].replyTo, { name: valid.contactName, address: valid.email });
+  });
+
+  test("partial acceptance (one of several recipients refused) is not success", async () => {
+    process.env.CONTACT_RECIPIENT_EMAIL = "a@example.test,b@example.test";
+    const partial = createInquiryHandler({
+      transport: () => ({ sendMail: async () => ({ accepted: ["a@example.test"], rejected: ["b@example.test"] }) }),
+      rateLimited: () => 0,
+      log: () => {},
+    });
+    const res = { writeHead(status) { this.status = status; }, end(body) { this.body = body; } };
+    const req = Object.assign(Readable.from([Buffer.from(JSON.stringify(valid))]), { method: "POST", headers: { "content-type": "application/json" }, socket: {} });
+    await partial(req, res);
+    assert.equal(res.status, 502);
   });
 
   test("HTML body escapes user content and header fields cannot be injected", async () => {
@@ -201,7 +224,7 @@ describe("real nodemailer MIME output (offline stream transport, nothing sent)",
         async sendMail(message) {
           const info = await stream.sendMail(message);
           mime = info.message.toString("utf8");
-          return { accepted: [message.to], rejected: [] };
+          return { accepted: [message.to].flat(), rejected: [] };
         },
       }),
       rateLimited: () => 0,

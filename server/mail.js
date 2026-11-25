@@ -12,15 +12,22 @@ export const SENDER_NAME = "Longstreet Press";
 
 /**
  * Internal inbox for Book Marketing inquiries. Fixed on the server; the browser
- * never supplies or sees it. CONTACT_RECIPIENT_EMAIL may override it per deployment.
+ * never supplies or sees it. CONTACT_RECIPIENT_EMAIL may override it per deployment
+ * with one address or a comma-separated list.
  */
 export const DEFAULT_RECIPIENT = "associatesalman@gmail.com";
 
 /** Variables that must be set before an email can be sent. */
 export const REQUIRED_ENV = ["CONTACT_FROM_EMAIL", "SMTP_HOST", "SMTP_USER", "SMTP_PASS"];
 
-export function recipient() {
-  return process.env.CONTACT_RECIPIENT_EMAIL?.trim() || DEFAULT_RECIPIENT;
+/** Recipient addresses from CONTACT_RECIPIENT_EMAIL (comma/semicolon separated, de-duplicated), or the default. */
+export function recipients() {
+  const seen = new Set();
+  const list = String(process.env.CONTACT_RECIPIENT_EMAIL ?? "")
+    .split(/[,;]/)
+    .map((address) => address.trim())
+    .filter((address) => address && !seen.has(address.toLowerCase()) && seen.add(address.toLowerCase()));
+  return list.length ? list : [DEFAULT_RECIPIENT];
 }
 
 export function sender() {
@@ -40,12 +47,13 @@ export function sendJson(res, { status, body, headers }) {
   res.end(JSON.stringify(body));
 }
 
-/** True only when the provider accepted the message for the recipient and rejected no one. */
-export function acceptedBy(info, address) {
+/** True only when the provider accepted the message for every recipient and rejected no one. */
+export function acceptedBy(info, addresses) {
   const accepted = (info?.accepted ?? []).map((entry) =>
     (typeof entry === "string" ? entry : entry.address).toLowerCase(),
   );
-  return accepted.includes(address.toLowerCase()) && !(info?.rejected ?? []).length;
+  const wanted = [addresses].flat();
+  return wanted.every((address) => accepted.includes(address.toLowerCase())) && !(info?.rejected ?? []).length;
 }
 
 export function escapeHtml(value) {

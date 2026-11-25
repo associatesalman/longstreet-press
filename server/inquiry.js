@@ -7,14 +7,14 @@ import {
   createSmtpTransport,
   escapeHtml,
   missingEnv,
-  recipient,
+  recipients,
   sender,
   sendJson,
 } from "./mail.js";
 
 /**
  * POST /api/inquiry: validates a Book Marketing inquiry and emails it over SMTP to
- * the internal recipient, From "Longstreet Press" <CONTACT_FROM_EMAIL>, with the
+ * every internal recipient (CONTACT_RECIPIENT_EMAIL), From "Longstreet Press" <CONTACT_FROM_EMAIL>, with the
  * visitor's validated address as Reply-To. Runs only on the server (Node), mounted
  * by server/index.js in production and by vite.config.js in dev/preview.
  *
@@ -69,7 +69,7 @@ export function createInquiryHandler({
       return { status: 503, body: { ok: false, error: "unavailable" } };
     }
 
-    const to = recipient();
+    const to = recipients();
     try {
       const info = await transport().sendMail({
         from: sender(),
@@ -79,7 +79,7 @@ export function createInquiryHandler({
         text: emailText(values),
         html: emailHtml(values),
       });
-      // Success only when the provider accepted the message for our recipient.
+      // Success only when the provider accepted the message for every recipient.
       if (!acceptedBy(info, to)) {
         log("provider did not accept the message");
         return { status: 502, body: { ok: false, error: "delivery" } };
